@@ -14,7 +14,7 @@ SQLStrObj = SQLStrQuery(5)  # TODO: Change to global var
 with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
     config = yaml.safe_load(stream)
 
-journal_df = pd.read_csv(os.path.join(os.getcwd(), "../data/journalslist.csv"))
+journal_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "data/journalslist.csv"))
 
 cnx = mysql.connector.connect(**config)
 logger.info("Connected to SQL")
