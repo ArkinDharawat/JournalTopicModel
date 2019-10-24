@@ -4,7 +4,7 @@ class SQLStrQuery(object):
 
     def create_tables(self):
         table_acad_journal = "CREATE TABLE Academic_Journal " \
-                             "(Journal_Id INTEGER NOT NULL, Journal_Name CHAR(255), Category VARCHAR(255), " \
+                             "(Journal_Id INTEGER NOT NULL, Journal_Name CHAR(255), Category VARCHAR(1024), " \
                              "PRIMARY KEY(Journal_Id));"
 
         table_acad_paper = "CREATE TABLE Academic_Paper " \
