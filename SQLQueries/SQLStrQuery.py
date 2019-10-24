@@ -11,7 +11,7 @@ class SQLStrQuery(object):
                            "(Paper_Id INTEGER NOT NULL, Authors CHAR(64), Journal_Id INTEGER NOT NULL, Title CHAR(255), Abstract TEXT, " \
                            "PRIMARY KEY(Paper_Id), FOREIGN KEY(Journal_Id) REFERENCES Academic_Journal(Journal_Id));"
 
-        topic_values = ["Paper_Id INTERGER NOT NULL"]
+        topic_values = ["Paper_Id INTEGER NOT NULL"]
         for i in range(self.num_topics):
             topic_values.append("Topic{0} INTEGER".format(i))
         value_str = ",".join(topic_values)
