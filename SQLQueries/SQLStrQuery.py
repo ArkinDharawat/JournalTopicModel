@@ -19,6 +19,9 @@ class SQLStrQuery(object):
 
         return [table_acad_journal, table_acad_paper, table_topic]
 
+    # TODO: INSERT journals
+    # TODO: INSERT
+    # TODO: UPDATE
 
 if __name__ == '__main__':
     obj = SQLStrQuery(5)
