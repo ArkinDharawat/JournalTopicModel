@@ -14,7 +14,7 @@ SQLStrObj = SQLStrQuery(5)  # TODO: Change to global var
 with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
     config = yaml.safe_load(stream)
 
-journal_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "data/journalslist.csv"))
+journal_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/journalslist.csv"))
 
 cnx = mysql.connector.connect(**config)
 logger.info("Connected to SQL")
@@ -25,7 +25,6 @@ logger.info("Created Cursor")
 insert_query = SQLStrObj.insert_journal()
 for id, row in journal_df.iterrows():
     name, journal_id, category = row.values
-    cursor.execute(insert_query, (journal_id, name, category))
     cnx.commit()  # Commit one row at a time
 
 cursor.close()
