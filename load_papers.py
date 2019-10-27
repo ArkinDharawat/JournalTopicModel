@@ -47,11 +47,12 @@ for chunk in df_full:
         abstract = remove_non_ascii(abstract)
 
         topics = TopicModelobj.get_topics(title=title, abstract=abstract)
-
-        insert_topic_query = SQLStrObj.insert_topic(id, topics)
-        cursor.execute(insert_paper_query, (id, author, journal_id, title, abstract))
-
-        cursor.execute(insert_topic_query)
+        try:
+            insert_topic_query = SQLStrObj.insert_topic(id, topics)
+            cursor.execute(insert_paper_query, (id, author, journal_id, title, abstract))
+            cursor.execute(insert_topic_query)
+        except Exception as e:
+            logger.debug("Failed at {0} with exception {1}".format(str(id), e))
         # cnx.commit()  # Commit one row at a time
     i += 1
 
