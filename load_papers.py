@@ -41,8 +41,9 @@ for chunk in df_full:
         insert_topic_query = SQLStrObj.insert_topic(topics)
 
         cursor.execute(insert_paper_query, (id, author, journal_id, title, abstract))
-        cursor.execute(insert_topic_query, id)
+        cnx.commit()  # Commit one row at a time
 
+        cursor.execute(insert_topic_query, id)
         cnx.commit()  # Commit one row at a time
     i += 1
 
