@@ -8,8 +8,6 @@ from SQLQueries.SQLStrQuery import SQLStrQuery
 from TopicModel.TopicExtractor import TopicModel
 from TopicModel.TextProcessor import remove_non_ascii
 
-
-
 logger = logging.getLogger("load-journal-sql")
 
 SQLStrObj = SQLStrQuery(10)  # TODO: Change to global var
