@@ -6,14 +6,8 @@ import mysql.connector
 import yaml
 from SQLQueries.SQLStrQuery import SQLStrQuery
 from TopicModel.TopicExtractor import TopicModel
+from TopicModel.TextProcessor import remove_non_ascii
 
-import re
-
-
-def remove_non_ascii(text):
-    if isinstance(text, float):
-        return ""
-    return re.sub(r'[^\x00-\x7F]+', ' ', text)
 
 
 logger = logging.getLogger("load-journal-sql")
@@ -56,7 +50,7 @@ for chunk in df_full:
             cursor.execute(insert_topic_query)
         except Exception as e:
             logger.debug("Failed at {0} with exception {1}".format(str(id), e))
-        cnx.commit()  # Commit one row at a time
+        # cnx.commit()  # Commit one row at a time
     i += 1
 
 cursor.close()
