@@ -9,6 +9,11 @@ from TopicModel.TopicExtractor import TopicModel
 
 import re
 
+def remove_non_ascii(text):
+    if not isinstance(text, float):
+        return ""
+    return re.sub(r'[^\x00-\x7F]+',' ', text)
+
 logger = logging.getLogger("load-journal-sql")
 
 SQLStrObj = SQLStrQuery(10)  # TODO: Change to global var
@@ -38,8 +43,8 @@ for chunk in df_full:
     df_chunked.columns = ["title", "author", "abstract", "journal_id"]
     for id, row in df_chunked.iterrows():
         title, author, abstract, journal_id = row.title, row.author, row.abstract, row.journal_id
-        title = re.sub(r'[^\x00-\x7F]+',' ', title)
-        abstract = re.sub(r'[^\x00-\x7F]+',' ', abstract)
+        title = remove_non_ascii(title)
+        abstract = remove_non_ascii(abstract)
 
         topics = TopicModelobj.get_topics(title=title, abstract=abstract)
 
