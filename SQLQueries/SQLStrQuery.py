@@ -32,14 +32,15 @@ class SQLStrQuery(object):
     def delete_paper(self):
         return "DELETE FROM Academic_Paper WHERE Paper_Id = %s;"
 
-    def insert_topic(self, topic_indices):
+    def insert_topic(self, paper_id, topic_indices):
         topic_str = ','.join(["Topic{0}".format(i) for i in range(self.num_topics)])
         value_str = ["0"] * self.num_topics
         for k in topic_indices:
             value_str[k - 1] = "1"
         value_str = ",".join(value_str)
 
-        return "INSERT INTO Topics_per_Paper (Paper_Id, " + topic_str + ") VALUES (%s, " + value_str + ");"
+        return "INSERT INTO Topics_per_Paper (Paper_Id, " + topic_str + ") VALUES (" + \
+               str(paper_id) + "," + value_str + ");"
 
     def update_topic(self, topic_indices):
         value_str = ["0"] * self.num_topics
@@ -52,6 +53,7 @@ class SQLStrQuery(object):
 
     def delete_topic(self):
         return "DELETE FROM Topics_per_Paper WHERE Paper_Id = %s;"
+
 
 if __name__ == '__main__':
     obj = SQLStrQuery(5)
