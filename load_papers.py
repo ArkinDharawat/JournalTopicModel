@@ -7,6 +7,8 @@ import yaml
 from SQLQueries.SQLStrQuery import SQLStrQuery
 from TopicModel.TopicExtractor import TopicModel
 
+import re
+
 logger = logging.getLogger("load-journal-sql")
 
 SQLStrObj = SQLStrQuery(10)  # TODO: Change to global var
@@ -36,15 +38,16 @@ for chunk in df_full:
     df_chunked.columns = ["title", "author", "abstract", "journal_id"]
     for id, row in df_chunked.iterrows():
         title, author, abstract, journal_id = row.title, row.author, row.abstract, row.journal_id
-        import code
-        code.interact(local={**locals(), **globals()})
+        title = re.sub(r'[^\x00-\x7F]+',' ', title)
+        abstract = re.sub(r'[^\x00-\x7F]+',' ', abstract)
+
         topics = TopicModelobj.get_topics(title=title, abstract=abstract)
 
         insert_topic_query = SQLStrObj.insert_topic(id, topics)
         cursor.execute(insert_paper_query, (id, author, journal_id, title, abstract))
 
         cursor.execute(insert_topic_query)
-        cnx.commit()  # Commit one row at a time
+        # cnx.commit()  # Commit one row at a time
     i += 1
 
 cursor.close()
