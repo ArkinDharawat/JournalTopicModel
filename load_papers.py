@@ -10,7 +10,7 @@ from TopicModel.TopicExtractor import TopicModel
 import re
 
 def remove_non_ascii(text):
-    if not isinstance(text, float):
+    if  isinstance(text, float):
         return ""
     return re.sub(r'[^\x00-\x7F]+',' ', text)
 
