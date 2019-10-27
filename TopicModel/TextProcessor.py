@@ -1,6 +1,8 @@
 import nltk
 import spacy
 
+import re
+
 spacy.load('en_core_web_sm')  # OR spacy.load('en_core_web_sm')
 """ 
 python -m spacy download en 
@@ -15,6 +17,12 @@ parser = English()
 if "stopwords" not in dir(nltk.corpus):
     nltk.download('stopwords')
 en_stop = set(nltk.corpus.stopwords.words('english'))
+
+
+def remove_non_ascii(text):
+    if isinstance(text, float):
+        return ""
+    return re.sub(r'[^\x00-\x7F]+', ' ', text)
 
 
 def tokenize(text):
@@ -37,8 +45,6 @@ def prepare_text_for_lda(text):
 
 def apply_tokenization(title, abstract):
     word = ""
-    if not isinstance(title, float):
-        word += title
-    if not isinstance(abstract, float):
-        word += abstract
+    word += remove_non_ascii(title)
+    word += remove_non_ascii(abstract)
     return prepare_text_for_lda(word)
