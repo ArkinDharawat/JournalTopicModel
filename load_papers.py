@@ -35,7 +35,7 @@ for chunk in df_full:
     df_chunked = chunk.iloc[:, [1, 2, 10, 13]]
     df_chunked.columns = ["title", "author", "abstract", "journal_id"]
     for id, row in df_chunked.iterrows():
-        title, author, abstract, journal_id = df_chunked.title, df_chunked.author, df_chunked.abstract, df_chunked.journal_id
+        title, author, abstract, journal_id = row.title, row.author, row.abstract, row.journal_id
         topics = TopicModelobj.get_topics(title=title, abstract=abstract)
 
         insert_topic_query = SQLStrObj.insert_topic(topics)
