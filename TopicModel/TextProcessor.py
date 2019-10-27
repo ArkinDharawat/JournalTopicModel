@@ -1,8 +1,13 @@
 import nltk
 import spacy
 
-spacy.load('en')
-# python -m spacy download en
+spacy.load('en_core_web_sm')  # OR spacy.load('en_core_web_sm')
+""" 
+python -m spacy download en 
+OR 
+python3 -m pip install --user https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz
+"""
+
 from spacy.lang.en import English
 
 parser = English()
