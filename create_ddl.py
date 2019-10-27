@@ -7,7 +7,7 @@ from SQLQueries.SQLStrQuery import SQLStrQuery
 
 logger = logging.getLogger("ddl-script")
 
-SQLStrObj = SQLStrQuery(5)  # TODO: Change to global var
+SQLStrObj = SQLStrQuery(10)  # TODO: Change to global var
 
 # Read YAML file
 with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:

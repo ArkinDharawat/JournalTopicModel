@@ -9,7 +9,7 @@ from TopicModel.TopicExtractor import TopicModel
 
 logger = logging.getLogger("load-journal-sql")
 
-SQLStrObj = SQLStrQuery(5)  # TODO: Change to global var
+SQLStrObj = SQLStrQuery(10)  # TODO: Change to global var
 TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
 
 # Read YAML file
