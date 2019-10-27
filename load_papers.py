@@ -38,12 +38,12 @@ for chunk in df_full:
         title, author, abstract, journal_id = row.title, row.author, row.abstract, row.journal_id
         topics = TopicModelobj.get_topics(title=title, abstract=abstract)
 
-        insert_topic_query = SQLStrObj.insert_topic(topics)
+        insert_topic_query = SQLStrObj.insert_topic(id, topics)
 
         cursor.execute(insert_paper_query, (id, author, journal_id, title, abstract))
-        cnx.commit()  # Commit one row at a time
+        # cnx.commit()  # Commit one row at a time
 
-        cursor.execute(insert_topic_query, id)
+        cursor.execute(insert_topic_query)
         cnx.commit()  # Commit one row at a time
     i += 1
 
