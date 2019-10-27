@@ -9,10 +9,12 @@ from TopicModel.TopicExtractor import TopicModel
 
 import re
 
+
 def remove_non_ascii(text):
-    if  isinstance(text, float):
+    if isinstance(text, float):
         return ""
-    return re.sub(r'[^\x00-\x7F]+',' ', text)
+    return re.sub(r'[^\x00-\x7F]+', ' ', text)
+
 
 logger = logging.getLogger("load-journal-sql")
 
@@ -24,7 +26,8 @@ with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
     config = yaml.safe_load(stream)
 
 chunksize = 10 ** 3
-df_full = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/AllArticles.csv"), chunksize=chunksize, header=None)
+df_full = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/AllArticles.csv"), chunksize=chunksize,
+                      header=None)
 
 cnx = mysql.connector.connect(**config)
 logger.info("Connected to SQL")
@@ -53,7 +56,7 @@ for chunk in df_full:
             cursor.execute(insert_topic_query)
         except Exception as e:
             logger.debug("Failed at {0} with exception {1}".format(str(id), e))
-        # cnx.commit()  # Commit one row at a time
+        cnx.commit()  # Commit one row at a time
     i += 1
 
 cursor.close()
