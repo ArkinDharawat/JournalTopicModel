@@ -25,7 +25,7 @@ logger.info("Created Cursor")
 insert_query = SQLStrObj.insert_journal()
 for id, row in journal_df.iterrows():
     name, journal_id, category = row.values
-    cnx.commit()  # Commit one row at a time
+    cnx.commit(insert_query, (journal_id, name, category))  # Commit one row at a time
 
 cursor.close()
 cnx.close()
