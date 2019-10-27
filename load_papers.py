@@ -5,7 +5,7 @@ import os
 import mysql.connector
 import yaml
 from SQLQueries.SQLStrQuery import SQLStrQuery
-from TopicModel import TopicExtractor
+from TopicModel import TopicExtractor.TopicModel
 
 logger = logging.getLogger("load-journal-sql")
 
