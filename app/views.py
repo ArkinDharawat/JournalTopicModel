@@ -4,6 +4,8 @@ import mysql.connector
 import yaml
 import os
 from SQLQueries.SQLStrQuery import SQLStrQuery
+from TopicModel.TopicExtractor import TopicModel
+from TopicModel.TextProcessor import remove_non_ascii
 
 INSERT = "Insert"
 DELETE = "Delete"
@@ -54,8 +56,14 @@ def insert_data(request):
     title = str(request.form['title'])
     abstract = str(request.form['abstract'])
     journal_id = str(request.form['journal_id'])
+
+    title = remove_non_ascii(title)
+    abstract = remove_non_ascii(abstract)
+
     insert_paper_query = SQLStrObj.insert_paper()
+
     topics = TopicModelobj.get_topics(title=title, abstract=abstract)
+
     insert_topic_query = SQLStrObj.insert_topic(paper_id, topics)
     try:
         cursor.execute(insert_paper_query, (paper_id, authors, journal_id, title, abstract))
