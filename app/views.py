@@ -21,7 +21,7 @@ def before_request_func():
     with open(os.path.join(os.getcwd(), "config.yaml"), 'r') as stream:
         config = yaml.safe_load(stream)
     cnx = mysql.connector.connect(**config)
-    TopicModelobj = TopicModel( "../data/")
+    TopicModelobj = TopicModel( "/home/project/data")
     cursor = cnx.cursor()
 # static url
 @app.route('/')
