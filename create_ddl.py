@@ -24,9 +24,8 @@ logger.info("Created Cursor")
 logger.info("Created tables")
 
 stored_procedure = SQLStrObj.create_procedure()
-cursor.execute("DELIMITER //")
 cursor.execute(stored_procedure)
-cursor.execute("DELIMITER ;")
+
 
 cursor.close()
 cnx.close()
