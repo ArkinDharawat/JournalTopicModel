@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, g
 from app import app
 import mysql.connector
 import yaml
@@ -11,23 +11,25 @@ INSERT = "Insert"
 DELETE = "Delete"
 UPDATE = "Update"
 SEARCH = "Search"
-cnx = None
-SQLStrObj = None
-TopicModelobj = None
-cursor = None
-
+g.cnx = None
+g.SQLStrObj = None
+g.TopicModelobj = None
+g.cursor = None
 
 
 @app.before_first_request
-def before_request_func():
+def before_first_request_func():
     print("Here?")
-    SQLStrObj = SQLStrQuery(10)
+    g.SQLStrObj = SQLStrQuery(10)
+    g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
+
+
+@app.before_request
+def before_request_func():
     with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
         config = yaml.safe_load(stream)
-    cnx = mysql.connector.connect(**config)
-    TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
-    cursor = cnx.cursor()
-
+    g.cnx = mysql.connector.connect(**config)
+    g.cursor = g.cnx.cursor()
 
 
 # static url
@@ -51,7 +53,10 @@ def insert_endpoint():
 
 
 def insert_data(request):
-    print(SQLStrObj)
+    SQLStrObj = g.SQLStrObj
+    TopicModelobj = g.TopicModelobj
+    cursor = g.cursor
+    cnx = g.cnx
 
     paper_id = str(request.form['paper_id'])
     authors = str(request.form['authors'])
@@ -76,6 +81,10 @@ def insert_data(request):
 
 
 def delete_data(request):
+    SQLStrObj = g.SQLStrObj
+    cursor = g.cursor
+    cnx = g.cnx
+
     paper_id = str(request.form['paper_id'])
     delete_paper_query = SQLStrObj.delete_paper()
     try:
@@ -83,6 +92,7 @@ def delete_data(request):
     except Exception as e:
         pass
     cnx.commit()
+
 
 def filter_update_data(request):
     default = "Default"
@@ -109,6 +119,10 @@ def filter_update_data(request):
 
 
 def update_data(request):
+    SQLStrObj = g.SQLStrObj
+    cursor = g.cursor
+    cnx = g.cnx
+
     paper_id = str(request.form['paper_id'])
     column, data = filter_update_data(request)
     if column != [] and data != []:
@@ -119,7 +133,13 @@ def update_data(request):
             cursor.execute(update_query, data)
         except Exception as e:
             pass
-
+        cnx.commit()
 
 def search_data(request):
     pass
+
+
+@app.after_request
+def after_request_func():
+    g.cursor.close()
+    g.cnx.close()
