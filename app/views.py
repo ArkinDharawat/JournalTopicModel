@@ -136,6 +136,6 @@ def search_data(request):
 
 
 @app.after_request
-def after_request_func():
+def after_request_func(response):
     g.cursor.close()
     g.cnx.close()
