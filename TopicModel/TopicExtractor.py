@@ -1,7 +1,7 @@
 import pickle
 import gensim
 import os
-from TextProcessor import apply_tokenization
+from TopicModel.TextProcessor import apply_tokenization
 
 
 class TopicModel(object):
