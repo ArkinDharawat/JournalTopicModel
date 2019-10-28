@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from app import app
 import mysql.connector
 import yaml
@@ -26,7 +26,7 @@ def before_request_func():
 # static url
 @app.route('/')
 def index():
-    return render('templates/index.html')
+    return render_template('templates/index.html')
 
 @app.route('/query', methods=['POST'])
 def insert_endpoint():
