@@ -26,7 +26,7 @@ def before_request_func():
 # static url
 @app.route('/')
 def index():
-    return render_template('templates/index.html')
+    return render_template('index.html')
 
 @app.route('/query', methods=['POST'])
 def insert_endpoint():
