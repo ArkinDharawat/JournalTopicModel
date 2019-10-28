@@ -24,7 +24,7 @@ class SQLStrQuery(object):
 
         part7 = "UNTIL finished END REPEAT; CLOSE stdcur; END//"
 
-        total_sql_str = "DELIMITER //" + part1 + part2 + part3 + part4 + part5 + part6 + part7 + " DELIMITER ;"
+        total_sql_str = part1 + part2 + part3 + part4 + part5 + part6 + part7
 
         return total_sql_str
 
