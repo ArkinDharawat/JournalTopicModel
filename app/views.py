@@ -87,8 +87,8 @@ def delete_data(request):
     delete_paper_query = SQLStrObj.delete_paper()
     delete_topic = SQLStrObj.delete_topic()
     try:
-        cursor.execute(delete_topic, paper_id)
-        cursor.execute(delete_paper_query, paper_id)
+        cursor.execute(delete_topic, (paper_id, ))
+        cursor.execute(delete_paper_query, (paper_id, ))
     except Exception as e:
         return "Error :" + str(e)
     cnx.commit()
