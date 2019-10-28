@@ -17,8 +17,8 @@ class SQLStrQuery(object):
 
         part5 = "SET AB = " + ' + '.join(["A_Topic{0} * B_Topic{0}".format(i) for i in range(self.num_topics)]) + ";\n"
 
-        part6 = "SET A = SQRT(" + ','.join(
-            ["A_Topic{0}".format(i) for i in range(self.num_topics)]) + "); SET B = SQRT(" + ','.join(
+        part6 = "SET A = SQRT(" + '+'.join(
+            ["A_Topic{0}".format(i) for i in range(self.num_topics)]) + "); SET B = SQRT(" + '+'.join(
             ["B_Topic{0}".format(i) for i in range(
                 self.num_topics)]) + "); SET CosDist = ROUND(AB / (A * B), 2); INSERT INTO temp_topic_table VALUES (Paper_Id, CosDist)" + ";\n"
 
@@ -83,7 +83,7 @@ class SQLStrQuery(object):
 
 if __name__ == '__main__':
     obj = SQLStrQuery(10)
-    obj.create_procedure()
+    print(obj.create_procedure())
     # print(obj.update_paper([2, 4]))
     # obj.create_tables()
     # obj.insert_topic([2, 4])
