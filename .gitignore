@@ -105,3 +105,6 @@ venv.bak/
 
 #config
 config.yaml
+
+#DS_Store
+.DS_Store

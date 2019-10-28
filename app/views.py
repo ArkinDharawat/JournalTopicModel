@@ -29,13 +29,13 @@ def index():
 def insert_endpoint():
     action = str(request.form.get('action'))
     if action == INSERT:
-        pass
+        insert_data(request)
     elif action == DELETE:
-        pass
+        delete_data(request)
     elif action == UPDATE:
-        pass
+        update_data(request)
     elif action == SEARCH:
-        pass
+        search_data(request)
 
 def insert_data(request):
     paper_id = str(request.form['paper_id'])
