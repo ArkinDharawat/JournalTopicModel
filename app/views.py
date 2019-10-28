@@ -23,7 +23,7 @@ def before_request_func():
     with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
         config = yaml.safe_load(stream)
     cnx = mysql.connector.connect(**config)
-    TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../../project/data/"))
+    TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
     cursor = cnx.cursor()
 
 
