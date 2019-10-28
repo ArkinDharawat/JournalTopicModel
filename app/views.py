@@ -38,13 +38,13 @@ def insert_endpoint():
     action = str(request.form.get('action'))
 
     if action == INSERT:
-        insert_data(request)
+        return insert_data(request)
     elif action == DELETE:
-        delete_data(request)
+        return  delete_data(request)
     elif action == UPDATE:
-        update_data(request)
-    elif action == SEARCH:
-        search_data(request)
+        return  update_data(request)
+    # elif action == SEARCH:
+    #     search_data(request)
 
 
 def insert_data(request):
