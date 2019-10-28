@@ -16,12 +16,11 @@ SEARCH = "Search"
 @app.before_first_request
 def before_first_request_func():
     print("Here?")
-    g.SQLStrObj = SQLStrQuery(10)
-    g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
-
 
 @app.before_request
 def before_request_func():
+    g.SQLStrObj = SQLStrQuery(10)
+    g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
     with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
         config = yaml.safe_load(stream)
     g.cnx = mysql.connector.connect(**config)
@@ -49,6 +48,10 @@ def insert_endpoint():
 
 
 def insert_data(request):
+
+    import code
+    code.interact(local={**locals(), **globals()})
+
     SQLStrObj = g.SQLStrObj
     TopicModelobj = g.TopicModelobj
     cursor = g.cursor
