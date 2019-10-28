@@ -19,6 +19,10 @@ cursor = None
 
 @app.before_first_request
 def before_request_func():
+
+    import code
+    code.interact(local={**locals(), **globals()})
+
     SQLStrObj = SQLStrQuery(10)
     with open(os.path.join(os.getcwd(), "../config.yml"), 'r') as stream:
         config = yaml.safe_load(stream)
