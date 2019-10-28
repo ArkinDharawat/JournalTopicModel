@@ -16,7 +16,7 @@ SEARCH = "Search"
 @app.before_first_request
 def before_request_func():
     SQLStrObj = SQLStrQuery(10)
-    with open(os.path.join(os.getcwd(), "../config.yaml"), 'r') as stream:
+    with open(os.path.join(os.getcwd(), "config.yaml"), 'r') as stream:
         config = yaml.safe_load(stream)
     cnx = mysql.connector.connect(**config)
     TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../../project/data/"))
