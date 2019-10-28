@@ -8,9 +8,16 @@ INSERT = "Insert"
 DELETE = "Delete"
 UPDATE = "Update"
 SEARCH = "Search"
+cnx = None
+SQLStrObj = None
+TopicModelobj = None
 @app.before_first_request
 def before_request_func():
-
+    SQLStrObj = SQLStrQuery(10)
+    with open(os.path.join(os.getcwd(), "../config.yml"), 'r') as stream:
+        config = yaml.safe_load(stream)
+    cnx = mysql.connector.connect(**config)
+    TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../../project/data/"))
 # static url
 @app.route('/')
 def index():
@@ -33,6 +40,17 @@ def insert_data(request):
     authors = str(request.form['authors'])
     title = str(request.form['title'])
     abstract = str(request.form['abstract'])
+    journal_id = str(request.form['journal_id'])
+    cursor = cnx.cursor()
+    insert_paper_query = SQLStrObj.insert_paper()
+    topics = TopicModelobj.get_topics(title=title, abstract=abstract)
+    insert_topic_query = SQLStrObj.insert_topic(paper_id, topics)
+    try:
+        cursor.execute(insert_paper_query, (paper_id, authors, journal_id, title, abstract))
+        cursor.execute(insert_topic_query)
+    except Exception as e:
+        pass  
+    cursor.close()
 
 def delete_data(request):
     paper_id = str(request.form['paper_id'])
