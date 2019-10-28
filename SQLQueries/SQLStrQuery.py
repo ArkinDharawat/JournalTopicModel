@@ -22,7 +22,7 @@ class SQLStrQuery(object):
             ["B_Topic{0}".format(i) for i in range(
                 self.num_topics)]) + "); SET CosDist = ROUND(AB / (A * B), 2); INSERT INTO temp_topic_table VALUES (Paper_Id, CosDist)" + ";\n"
 
-        part7 = "UNTIL finished END REPEAT; CLOSE stdcur; END//"
+        part7 = "UNTIL finished END REPEAT; CLOSE stdcur; END"
 
         total_sql_str = part1 + part2 + part3 + part4 + part5 + part6 + part7
 
