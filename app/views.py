@@ -4,6 +4,8 @@ import mysql.connector
 import yaml
 from SQLQueries.SQLStrQuery import SQLStrQuery
 import os
+from TopicModel.TopicExtractor import TopicModel
+
 
 INSERT = "Insert"
 DELETE = "Delete"
