@@ -48,10 +48,6 @@ def insert_endpoint():
 
 
 def insert_data(request):
-
-    import code
-    code.interact(local={**locals(), **globals()})
-
     SQLStrObj = g.SQLStrObj
     TopicModelobj = g.TopicModelobj
     cursor = g.cursor
@@ -75,8 +71,10 @@ def insert_data(request):
         cursor.execute(insert_paper_query, (paper_id, authors, journal_id, title, abstract))
         cursor.execute(insert_topic_query)
     except Exception as e:
-        pass
+        return "Error :" + str(e)
     cnx.commit()
+
+    return "INSERTION SUCCESSFULL"
 
 
 def delete_data(request):
@@ -91,6 +89,8 @@ def delete_data(request):
     except Exception as e:
         pass
     cnx.commit()
+
+    return "DELETION SUCCESSFULL"
 
 
 def filter_update_data(request):
@@ -133,6 +133,7 @@ def update_data(request):
         except Exception as e:
             pass
         cnx.commit()
+    return "UPDATE SUCCESSFULL"
 
 def search_data(request):
     pass
