@@ -1,0 +1,36 @@
+<html>
+<head>
+  <link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+<div class="header">
+  <h1>Data Crunch Article Recommender</h1>
+</div>
+
+<h3>Introduction</h3>
+
+<div>
+  <form action="/query" method="POST">
+    <label for="title">Title of Article</label>
+    <input type="text" id="title" name="title" placeholder="Article Name ..">
+
+    <label for="authors">Name of Authors</label>
+    <input type="text" id="authors" name="authors" placeholder=" Author..">
+
+    <label for="abstract">Abstract</label>
+    <input type="text" id="abstract" name="abstract" placeholder=" Abstract..">
+
+    <label for="action">To Put Here</label>
+    <select id="action" name="action">
+      <option value="Insert">Insert</option>
+      <option value="Delete">Delete</option>
+      <option value="Update">Update</option>
+      <option value="Search">Search</option>
+    </select>
+
+    <input type="submit" value="Submit">
+  </form>
+</div>
+
+</body>
+</html>
