@@ -33,7 +33,7 @@ def before_request_func():
 # static url
 @app.route('/')
 def index():
-    return render_template(os.path.join(os.getcwd(), 'app/templates/index.html'))
+    return render_template('index.html')
 
 
 @app.route('/query', methods=['POST'])
