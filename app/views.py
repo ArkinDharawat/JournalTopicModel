@@ -17,8 +17,10 @@ TopicModelobj = None
 cursor = None
 
 
+
 @app.before_first_request
 def before_request_func():
+    print("Here?")
     SQLStrObj = SQLStrQuery(10)
     with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
         config = yaml.safe_load(stream)
@@ -49,6 +51,8 @@ def insert_endpoint():
 
 
 def insert_data(request):
+    print(SQLStrObj)
+
     paper_id = str(request.form['paper_id'])
     authors = str(request.form['authors'])
     title = str(request.form['title'])
