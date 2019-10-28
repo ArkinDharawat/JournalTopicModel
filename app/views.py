@@ -26,10 +26,7 @@ def before_request_func():
     TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
     cursor = cnx.cursor()
 
-@app.teardown_appcontext
-def after_teardown():
-    cursor.close()
-    cnx.close()
+
 
 # static url
 @app.route('/')
