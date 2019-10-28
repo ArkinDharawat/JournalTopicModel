@@ -2,6 +2,32 @@ class SQLStrQuery(object):
     def __init__(self, k):
         self.num_topics = k
 
+    def create_procedure(self):
+        part1 = "CREATE PROCEDURE GetTopicCosDist(" + ','.join(
+            [" IN B_Topic{0} INTEGER".format(i) for i in range(self.num_topics)]) + ") BEGIN \n"
+
+        part2 = "DECLARE finished INTEGER DEFAULT 0; DECLARE Paper_Id INTEGER; DECLARE AB INTEGER; DECLARE A REAL; DECLARE B REAL; DECLARE CosDist REAL;" + ';'.join(
+            [" DECLARE A_Topic{0} INTEGER".format(i) for i in range(self.num_topics)]) + ";\n"
+
+        part3 = "DECLARE stdcur CURSOR FOR SELECT T.Paper_Id," + ','.join(["T.Topic{0}".format(i) for i in range(
+            self.num_topics)]) + " FROM Topics_per_Paper T; DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = 1;\n"
+
+        part4 = "DROP TABLE IF EXISTS temp_topic_table; CREATE TABLE temp_topic_table (Paper_Id INTEGER, CosineDistance REAL);  OPEN stdcur; REPEAT FETCH stdcur INTO Paper_Id," + ','.join(
+            ["A_Topic{0}".format(i) for i in range(self.num_topics)]) + ";\n"
+
+        part5 = "SET AB = " + ' + '.join(["A_Topic{0} * B_Topic{0}".format(i) for i in range(self.num_topics)]) + ";\n"
+
+        part6 = "SET A = SQRT(" + ','.join(
+            ["A_Topic{0}".format(i) for i in range(self.num_topics)]) + "); SET B = SQRT(" + ','.join(
+            ["B_Topic{0}".format(i) for i in range(
+                self.num_topics)]) + "); SET CosDist = ROUND(AB / (A * B), 2); INSERT INTO temp_topic_table VALUES (Paper_Id, CosDist)" + ";\n"
+
+        part7 = "UNTIL finished END REPEAT; CLOSE stdcur; END//"
+
+        total_sql_str = "DELIMITER //" + part1 + part2 + part3 + part4 + part5 + part6 + part7 + "DELIMITER ;"
+
+        return total_sql_str
+
     def create_tables(self):
         table_acad_journal = "CREATE TABLE Academic_Journal " \
                              "(Journal_Id INTEGER NOT NULL, Journal_Name CHAR(255), Category VARCHAR(1024), " \
@@ -56,7 +82,8 @@ class SQLStrQuery(object):
 
 
 if __name__ == '__main__':
-    obj = SQLStrQuery(5)
+    obj = SQLStrQuery(10)
+    obj.create_procedure()
     # print(obj.update_paper([2, 4]))
     # obj.create_tables()
     # obj.insert_topic([2, 4])
