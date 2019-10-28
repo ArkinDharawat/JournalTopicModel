@@ -139,3 +139,4 @@ def search_data(request):
 def after_request_func(response):
     g.cursor.close()
     g.cnx.close()
+    return response
