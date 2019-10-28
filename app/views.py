@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from app import app
 import mysql.connector
 import yaml
+import os
 from SQLQueries.SQLStrQuery import SQLStrQuery
 
 INSERT = "Insert"
@@ -12,6 +13,8 @@ cnx = None
 SQLStrObj = None
 TopicModelobj = None
 cursor = None
+
+
 @app.before_first_request
 def before_request_func():
     SQLStrObj = SQLStrQuery(10)
@@ -20,14 +23,21 @@ def before_request_func():
     cnx = mysql.connector.connect(**config)
     TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../../project/data/"))
     cursor = cnx.cursor()
+
+
 # static url
 @app.route('/')
 def index():
     return render_template('templates/index.html')
 
+
 @app.route('/query', methods=['POST'])
 def insert_endpoint():
     action = str(request.form.get('action'))
+
+    import code
+    code.interact(local={**locals(), **globals()})
+
     if action == INSERT:
         insert_data(request)
     elif action == DELETE:
@@ -36,6 +46,7 @@ def insert_endpoint():
         update_data(request)
     elif action == SEARCH:
         search_data(request)
+
 
 def insert_data(request):
     paper_id = str(request.form['paper_id'])
@@ -50,7 +61,8 @@ def insert_data(request):
         cursor.execute(insert_paper_query, (paper_id, authors, journal_id, title, abstract))
         cursor.execute(insert_topic_query)
     except Exception as e:
-        pass  
+        pass
+
 
 def delete_data(request):
     paper_id = str(request.form['paper_id'])
@@ -59,28 +71,32 @@ def delete_data(request):
         cursor.execute(delete_paper_query, paper_id)
     except Exception as e:
         pass
+
+
 def filter_update_data(request):
     default = "Default"
     column = []
     data = []
 
-    authors = str(request.form['authors']) 
-    if authors != default: 
+    authors = str(request.form['authors'])
+    if authors != default:
         column.append("authors")
         data.append(authors)
     title = str(request.form['title'])
-    if title != default: 
+    if title != default:
         column.append("title")
         data.append(title)
     abstract = str(request.form['abstract'])
-    if abstract != default: 
+    if abstract != default:
         column.append("abstract")
         data.append(abstract)
     journal_id = str(request.form['journal_id'])
-    if journal_id != default: 
+    if journal_id != default:
         column.append("journal_id")
         data.append(journal_id)
     return column, data
+
+
 def update_data(request):
     paper_id = str(request.form['paper_id'])
     column, data = filter_update_data(request)
@@ -93,8 +109,6 @@ def update_data(request):
         except Exception as e:
             pass
 
+
 def search_data(request):
     pass
-
-
-
