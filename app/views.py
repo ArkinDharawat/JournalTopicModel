@@ -17,6 +17,7 @@ SEARCH = "Search"
 def before_first_request_func():
     print("Here?")
 
+
 @app.before_request
 def before_request_func():
     g.SQLStrObj = SQLStrQuery(10)
@@ -40,9 +41,9 @@ def insert_endpoint():
     if action == INSERT:
         return insert_data(request)
     elif action == DELETE:
-        return  delete_data(request)
+        return delete_data(request)
     elif action == UPDATE:
-        return  update_data(request)
+        return update_data(request)
     # elif action == SEARCH:
     #     search_data(request)
 
@@ -84,10 +85,12 @@ def delete_data(request):
 
     paper_id = str(request.form['paper_id'])
     delete_paper_query = SQLStrObj.delete_paper()
+    delete_topic = SQLStrObj.delete_topic()
     try:
+        cursor.execute(delete_topic, paper_id)
         cursor.execute(delete_paper_query, paper_id)
     except Exception as e:
-        pass
+        return "Error :" + str(e)
     cnx.commit()
 
     return "DELETION SUCCESSFULL"
@@ -130,10 +133,12 @@ def update_data(request):
         update_query = SQLStrObj.update_paper
         try:
             cursor.execute(update_query, data)
+            # TODO: Add query to update topic
         except Exception as e:
-            pass
+            return "Error :" + str(e)
         cnx.commit()
     return "UPDATE SUCCESSFULL"
+
 
 def search_data(request):
     pass
