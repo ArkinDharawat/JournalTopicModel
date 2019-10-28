@@ -19,8 +19,8 @@ logger.info("Connected to SQL")
 cursor = cnx.cursor()
 logger.info("Created Cursor")
 
-# for ddl_query_str in SQLStrObj.create_tables():
-#     cursor.execute(ddl_query_str) # TODO: Remove commeting after making procedure
+for ddl_query_str in SQLStrObj.create_tables():
+    cursor.execute(ddl_query_str)
 logger.info("Created tables")
 
 stored_procedure = SQLStrObj.create_procedure()
