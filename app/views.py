@@ -4,13 +4,17 @@ import mysql.connector
 import yaml
 import os
 from SQLQueries.SQLStrQuery import SQLStrQuery
+
 from TopicModel.TopicExtractor import TopicModel
 from TopicModel.TextProcessor import remove_non_ascii
+
+import os
 
 INSERT = "Insert"
 DELETE = "Delete"
 UPDATE = "Update"
 SEARCH = "Search"
+
 
 
 @app.before_first_request
@@ -28,10 +32,12 @@ def before_request_func():
     g.cursor = g.cnx.cursor()
 
 
+
 # static url
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 
 @app.route('/query', methods=['POST'])
@@ -87,8 +93,8 @@ def delete_data(request):
     delete_paper_query = SQLStrObj.delete_paper()
     delete_topic = SQLStrObj.delete_topic()
     try:
-        cursor.execute(delete_topic, (paper_id, ))
-        cursor.execute(delete_paper_query, (paper_id, ))
+        cursor.execute(delete_topic, (paper_id,))
+        cursor.execute(delete_paper_query, (paper_id,))
     except Exception as e:
         return "Error :" + str(e)
     cnx.commit()
