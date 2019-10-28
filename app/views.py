@@ -26,6 +26,10 @@ def before_request_func():
     TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
     cursor = cnx.cursor()
 
+@app.teardown_appcontext
+def after_teardown():
+    cursor.close()
+    cnx.close()
 
 # static url
 @app.route('/')
@@ -36,9 +40,6 @@ def index():
 @app.route('/query', methods=['POST'])
 def insert_endpoint():
     action = str(request.form.get('action'))
-
-    import code
-    code.interact(local={**locals(), **globals()})
 
     if action == INSERT:
         insert_data(request)
@@ -70,6 +71,7 @@ def insert_data(request):
         cursor.execute(insert_topic_query)
     except Exception as e:
         pass
+    cnx.commit()
 
 
 def delete_data(request):
@@ -79,7 +81,7 @@ def delete_data(request):
         cursor.execute(delete_paper_query, paper_id)
     except Exception as e:
         pass
-
+    cnx.commit()
 
 def filter_update_data(request):
     default = "Default"
