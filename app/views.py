@@ -8,10 +8,10 @@ INSERT = "Insert"
 DELETE = "Delete"
 UPDATE = "Update"
 SEARCH = "Search"
-cnx = None
-SQLStrObj = None
-TopicModelobj = None
-cursor = None
+# cnx = None
+# SQLStrObj = None
+# TopicModelobj = None
+# cursor = None
 @app.before_first_request
 def before_request_func():
     SQLStrObj = SQLStrQuery(10)
