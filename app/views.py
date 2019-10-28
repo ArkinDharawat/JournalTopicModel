@@ -11,10 +11,6 @@ INSERT = "Insert"
 DELETE = "Delete"
 UPDATE = "Update"
 SEARCH = "Search"
-g.cnx = None
-g.SQLStrObj = None
-g.TopicModelobj = None
-g.cursor = None
 
 
 @app.before_first_request
