@@ -7,15 +7,20 @@ from app import app
 def index():
     return "Hello World!"
 
-# url parameters
-@app.route('/endpoint/<input>')
-def endpoint(input):
-    return input
+@app.route('/insert', methods=['POST'])
+def insert_endpoint():
+    paper_id = request.form['paper_id']
+    authors = request.form['authors']
+    journal_id = request.form['journal_id']
+    title = request.form['title']
+    abstract = request.form['abstract']
+    
 
-# api with endpoint
-@app.route('/Hashtag', methods=['GET'])
-def nameEndpoint():
-    if 'aaa' in request.args:
-    	return jsonify(a)
-    elif 'name' in request.args:
-        return "YAY"
+
+@app.route('/insert', methods=['POST'])
+def update_endpoint():
+    pass
+
+@app.route('/insert', methods=['POST'])
+def delete_endpoint():
+    pass
