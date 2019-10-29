@@ -52,6 +52,7 @@ class SQLStrQuery(object):
         return "INSERT INTO Academic_Paper (Paper_Id, Authors, Journal_Id, Title, Abstract) VALUES (%s, %s, %s, %s, %s);"
 
     def update_paper(self, col_names):
+        # TODO: Use self here
         alter_str = ','.join([x + "=%s" for x in col_names])
         return "UPDATE Academic_Paper SET " + alter_str + " WHERE Paper_Id = %s;"
 
