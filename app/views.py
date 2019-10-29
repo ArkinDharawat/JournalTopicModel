@@ -16,7 +16,6 @@ UPDATE = "Update"
 SEARCH = "Search"
 
 
-
 @app.before_first_request
 def before_first_request_func():
     print("Here?")
@@ -31,11 +30,11 @@ def before_request_func():
     g.cnx = mysql.connector.connect(**config)
     g.cursor = g.cnx.cursor()
 
+
 # static url
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 
 @app.route('/query', methods=['POST'])
@@ -146,7 +145,6 @@ def update_data(request):
 
 def search_data(request):
     SQLStrObj = g.SQLStrObj
-    TopicModelobj = g.TopicModelobj
     cursor = g.cursor
     default = "Default"
 
@@ -158,6 +156,17 @@ def search_data(request):
 
     if paper_id == default and authors == default:
         return "Cannot Search For Result"
+    elif authors != default:
+        print("authors")
+        search_authors = SQLStrObj.search_authors()
+        try:
+            cursor.execute(search_authors, (authors,))
+            results = [','.join(cursor.column_names)]
+            for row in cursor:
+                results.append(','.join([str(x) for x in row]))
+            return render_template("search_results.html", results=results)
+        except Exception as e:
+            return "Error :" + str(e)
     elif paper_id != default:
         print("paper id")
         search_paper = SQLStrObj.search_paper()
@@ -169,20 +178,8 @@ def search_data(request):
             return render_template("search_results.html", results=results)
         except Exception as e:
             return "Error :" + str(e)
-    elif authors != default and paper_id==default:
-        print("authors")
-        search_authors = SQLStrObj.search_authors()
-        try:
-            cursor.execute(search_authors, (authors,))
-            results = [','.join(cursor.column_names)]
-            for row in cursor:
-                results.append(','.join([str(x) for x in row]))
-            return render_template("search_results.html", results=results)
-        except Exception as e:
-            return "Error :" + str(e)
 
     return "Nothing Searched For"
-
 
 
 @app.after_request
