@@ -24,7 +24,7 @@ def before_first_request_func():
 def before_request_func():
     g.SQLStrObj = SQLStrQuery(10)
     g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
-    with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
+    with open(os.path.join(os.getcwd(), "config.yaml"), 'r') as stream:
         config = yaml.safe_load(stream)
     g.cnx = mysql.connector.connect(**config)
     g.cursor = g.cnx.cursor()
@@ -42,11 +42,15 @@ def insert_endpoint():
     action = str(request.form.get('action'))
 
     if action == INSERT:
-        return insert_data(request)
+        insert_data(request)
+        return render_template('insert_successful.html')
     elif action == DELETE:
-        return delete_data(request)
+        delete_data(request)
+        return render_template('delete_successful.html')
+
     elif action == UPDATE:
-        return update_data(request)
+        update_data(request)
+        return render_template('update_successful.html')
     elif action == SEARCH:
         return search_data(request)
     elif action == RECOMMEND:
@@ -103,26 +107,25 @@ def delete_data(request):
 
 def filter_update_data(request):
     default = g.default
-    column = []
-    data = []
+    data_map = {}
 
     authors = str(request.form['authors'])
     if authors != default:
-        column.append("authors")
-        data.append(authors)
+        data_map["authors"] = authors
+
     title = str(request.form['title'])
     if title != default:
-        column.append("title")
-        data.append(title)
+        data_map["title"] = title
+
     abstract = str(request.form['abstract'])
     if abstract != default:
-        column.append("abstract")
-        data.append(abstract)
+        data_map["abstract"] = abstract
+
     journal_id = str(request.form['journal_id'])
     if journal_id != default:
-        column.append("journal_id")
-        data.append(journal_id)
-    return column, data
+        data_map["journal_id"] = journal_id
+
+    return data_map
 
 
 def update_data(request):
@@ -131,17 +134,25 @@ def update_data(request):
     cnx = g.cnx
 
     paper_id = str(request.form['paper_id'])
-    column, data = filter_update_data(request)
+
+    data_map = filter_update_data(request)
+    column = []
+    data = []
+    for col in data_map:
+        column.append(col)
+        data.append(data_map[col])
+    data.append(paper_id)
+
+    # TODO: Add Update for Topics if title/abstract updated
+
     if column != [] and data != []:
-        data.append(paper_id)
-        data = tuple(data)
-        update_query = SQLStrObj.update_paper
+        update_query = SQLStrObj.update_paper(column)
         try:
-            cursor.execute(update_query, data)
-            # TODO: Add query to update topic
+            cursor.execute(update_query, tuple(data))
         except Exception as e:
             return "Error :" + str(e)
         cnx.commit()
+
     return "UPDATE SUCCESSFULL"
 
 
@@ -157,10 +168,10 @@ def search_data(request):
     if paper_id == default and authors == default and journal_id == default:
         return "Cannot Search For Result"
     elif authors != default:
-        search_authors = SQLStrObj.search_authors()
+        search_authors = SQLStrObj.search_authors()  # TODO: Fix Query to work with %s
         try:
             cursor.execute(
-                'SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";')  # TODO: Fix Query to work with %s
+                'SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";')
             results = [','.join(cursor.column_names)]
             for row in cursor:
                 results.append(','.join([str(x) for x in row]))
