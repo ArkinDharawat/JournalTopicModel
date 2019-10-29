@@ -209,7 +209,7 @@ def recommend_data(request):
         abstract = remove_non_ascii(abstract)
 
         topics = TopicModelobj.get_topics(title=title, abstract=abstract)
-        cursor.callproc("GetTopicCosDist", args=tuple(topics))
+        cursor.callproc("GetTopicCosDist", args=tuple(SQLStrObj.construct_topic_vector(topics)))
 
         import code
         code.interact(local={**locals(), **globals()})

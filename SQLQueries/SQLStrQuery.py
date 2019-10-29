@@ -45,6 +45,12 @@ class SQLStrQuery(object):
 
         return [table_acad_journal, table_acad_paper, table_topic]
 
+    def construct_topic_vector(self, topic_indices):
+        value_str = ["0"] * self.num_topics
+        for k in topic_indices:
+            value_str[k - 1] = "1"
+        return value_str
+
     def insert_journal(self):
         return "INSERT INTO Academic_Journal (Journal_Id, Journal_Name, Category) VALUES (%s, %s, %s);"
 
@@ -61,18 +67,14 @@ class SQLStrQuery(object):
 
     def insert_topic(self, paper_id, topic_indices):
         topic_str = ','.join(["Topic{0}".format(i) for i in range(self.num_topics)])
-        value_str = ["0"] * self.num_topics
-        for k in topic_indices:
-            value_str[k - 1] = "1"
+        value_str = self.construct_topic_vector(topic_indices)
         value_str = ",".join(value_str)
 
         return "INSERT INTO Topics_per_Paper (Paper_Id, " + topic_str + ") VALUES (" + \
                str(paper_id) + "," + value_str + ");"
 
     def update_topic(self, topic_indices):
-        value_str = ["0"] * self.num_topics
-        for k in topic_indices:
-            value_str[k - 1] = "1"
+        value_str = self.construct_topic_vector(topic_indices)
 
         alter_str = ','.join(["Topic" + str(i) + "=" + value_str[i] for i in range(self.num_topics)])
 
@@ -93,7 +95,8 @@ class SQLStrQuery(object):
     def get_recommended_papers(self, top_k):
         if top_k < self.num_topics:
             top_k = self.num_topics
-        return "SELECT * FROM temp_topic_table T JOIN FROM Academic_Paper P ON T.Paper_Id = P.Paper_Id ORDER BY CosineDistance DESC LIMIT " + str(top_k) + ";"
+        return "SELECT * FROM temp_topic_table T JOIN Academic_Paper P ON T.Paper_Id = P.Paper_Id ORDER BY CosineDistance DESC LIMIT " + str(
+            top_k) + ";"
 
 
 if __name__ == '__main__':
