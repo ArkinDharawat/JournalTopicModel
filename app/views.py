@@ -164,6 +164,7 @@ def search_data(request):
             cursor.execute(search_paper, (paper_id,))
             for row in cursor:
                 print(row)
+            return ""
         except Exception as e:
             return "Error :" + str(e)
 
