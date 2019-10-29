@@ -162,16 +162,24 @@ def search_data(request):
         search_paper = SQLStrObj.search_paper()
         try:
             cursor.execute(search_paper, (paper_id,))
-
-            # import code
-            # code.interact(local={**locals(), **globals()})
-
             results = [','.join(cursor.column_names)]
             for row in cursor:
                 results.append(','.join([str(x) for x in row]))
             return render_template("search_results.html", results=results)
         except Exception as e:
             return "Error :" + str(e)
+    elif authors != default:
+        search_authors = SQLStrObj.search_authors()
+        try:
+            cursor.execute(search_authors, (authors,))
+            results = [','.join(cursor.column_names)]
+            for row in cursor:
+                results.append(','.join([str(x) for x in row]))
+            return render_template("search_results.html", results=results)
+        except Exception as e:
+            return "Error :" + str(e)
+
+    return "Nothing Searched For"
 
 
 
