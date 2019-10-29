@@ -80,8 +80,14 @@ class SQLStrQuery(object):
     def delete_topic(self):
         return "DELETE FROM Topics_per_Paper WHERE Paper_Id = %s;"
 
+    def search_paper(self):
+        return "SELECT * FROM Academic_Paper WHERE PaperId=%s;"
+
+    def search_authors(self):
+        return "SELECT * FROM Academic_Paper WHERE Authors LIKE \"%%s%\";"
+
     def get_recommended_papers(self, top_k):
-        return "SELECT * FROM temp_topic_table ORDER BY CosineDistance DESC LIMIT"+str(top_k)+";"
+        return "SELECT * FROM temp_topic_table ORDER BY CosineDistance DESC LIMIT" + str(top_k) + ";"
 
 
 if __name__ == '__main__':

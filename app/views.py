@@ -31,8 +31,6 @@ def before_request_func():
     g.cnx = mysql.connector.connect(**config)
     g.cursor = g.cnx.cursor()
 
-
-
 # static url
 @app.route('/')
 def index():
@@ -147,7 +145,28 @@ def update_data(request):
 
 
 def search_data(request):
-    pass
+    SQLStrObj = g.SQLStrObj
+    TopicModelobj = g.TopicModelobj
+    cursor = g.cursor
+    default = "Default"
+
+    paper_id = str(request.form['paper_id'])
+    authors = str(request.form['authors'])
+    title = str(request.form['title'])
+    abstract = str(request.form['abstract'])
+    journal_id = str(request.form['journal_id'])
+
+    if paper_id == default and authors == default:
+        return "Cannot Search For Result"
+    elif paper_id != default:
+        search_paper = SQLStrObj.search_paper()
+        try:
+            cursor.execute(search_paper, (paper_id,))
+            for row in cursor:
+                print(row)
+        except Exception as e:
+            return "Error :" + str(e)
+
 
 
 @app.after_request
