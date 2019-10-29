@@ -81,7 +81,7 @@ class SQLStrQuery(object):
         return "DELETE FROM Topics_per_Paper WHERE Paper_Id = %s;"
 
     def search_paper(self):
-        return "SELECT * FROM Academic_Paper WHERE PaperId=%s;"
+        return "SELECT * FROM Academic_Paper WHERE Paper_Id = %s;"
 
     def search_authors(self):
         return "SELECT * FROM Academic_Paper WHERE Authors LIKE \"%%s%\";"
