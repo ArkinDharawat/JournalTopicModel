@@ -160,6 +160,10 @@ def search_data(request):
         print("authors")
         search_authors = SQLStrObj.search_authors()
         try:
+
+            import code
+            code.interact(local={**locals(), **globals()})
+
             cursor.execute(search_authors, (authors,))
             results = [','.join(cursor.column_names)]
             for row in cursor:
