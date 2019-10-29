@@ -45,11 +45,15 @@ def insert_endpoint():
     action = str(request.form.get('action'))
 
     if action == INSERT:
-        return insert_data(request)
+        insert_data(request)
+        return render_template('insert_successful.html')
     elif action == DELETE:
-        return delete_data(request)
+        delete_data(request)
+        return render_template('delete_successful.html')
+
     elif action == UPDATE:
-        return update_data(request)
+        update_data(request)
+        return render_template('update_successful.html')
     # elif action == SEARCH:
     #     search_data(request)
 
