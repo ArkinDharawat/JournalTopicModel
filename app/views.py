@@ -163,12 +163,12 @@ def search_data(request):
         try:
             cursor.execute(search_paper, (paper_id,))
 
-            import code
-            code.interact(local={**locals(), **globals()})
+            # import code
+            # code.interact(local={**locals(), **globals()})
 
             ret_str = ','.join(cursor.column_names) + "\n"
             for row in cursor:
-                ret_str = ret_str + ','.join(list(row)) + "\n"
+                ret_str = ret_str + ','.join([str(x) for x in row]) + "\n"
             return ret_str
         except Exception as e:
             return "Error :" + str(e)
