@@ -159,6 +159,7 @@ def search_data(request):
     if paper_id == default and authors == default:
         return "Cannot Search For Result"
     elif paper_id != default:
+        print("paper id")
         search_paper = SQLStrObj.search_paper()
         try:
             cursor.execute(search_paper, (paper_id,))
@@ -168,7 +169,8 @@ def search_data(request):
             return render_template("search_results.html", results=results)
         except Exception as e:
             return "Error :" + str(e)
-    elif authors != default:
+    elif authors != default and paper_id==default:
+        print("authors")
         search_authors = SQLStrObj.search_authors()
         try:
             cursor.execute(search_authors, (authors,))
