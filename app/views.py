@@ -163,8 +163,7 @@ def search_data(request):
 
             import code
             code.interact(local={**locals(), **globals()})
-
-            cursor.execute(search_authors, (authors,))
+            cursor.execute('SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";') # TODO: Fix Query to work with %s
             results = [','.join(cursor.column_names)]
             for row in cursor:
                 results.append(','.join([str(x) for x in row]))
