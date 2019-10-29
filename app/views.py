@@ -211,7 +211,7 @@ def recommend_data(request):
         topics = TopicModelobj.get_topics(title=title, abstract=abstract)
         cursor.callproc("GetTopicCosDist", args=tuple(topics))
 
-        get_top_recommendations = SQLStrQuery.get_recommended_papers(10)  # TODO: Make Argument or Get Global
+        get_top_recommendations = SQLStrQuery.get_recommended_papers(top_k=10)  # TODO: Make Argument or Get Global
 
         try:
             cursor.execute(get_top_recommendations)
