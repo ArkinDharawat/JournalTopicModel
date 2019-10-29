@@ -48,8 +48,8 @@ def insert_endpoint():
         return delete_data(request)
     elif action == UPDATE:
         return update_data(request)
-    # elif action == SEARCH:
-    #     search_data(request)
+    elif action == SEARCH:
+        return search_data(request)
 
 
 def insert_data(request):
