@@ -162,9 +162,10 @@ def search_data(request):
         search_paper = SQLStrObj.search_paper()
         try:
             cursor.execute(search_paper, (paper_id,))
+            ret_str = ','.join(cursor.column_names) + "\n"
             for row in cursor:
-                print(row)
-            return ""
+                ret_str = ret_str + ','.join(list(row)) + "\n"
+            return ret_str
         except Exception as e:
             return "Error :" + str(e)
 
