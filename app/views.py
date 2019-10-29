@@ -214,7 +214,7 @@ def recommend_data(request):
         import code
         code.interact(local={**locals(), **globals()})
 
-        get_top_recommendations = SQLStrQuery.get_recommended_papers(top_k=10)  # TODO: Make Argument or Get Global
+        get_top_recommendations = SQLStrObj.get_recommended_papers(top_k=10)  # TODO: Make Argument or Get Global
 
         try:
             cursor.execute(get_top_recommendations)
