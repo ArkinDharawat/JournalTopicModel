@@ -166,10 +166,10 @@ def search_data(request):
             # import code
             # code.interact(local={**locals(), **globals()})
 
-            ret_str = ','.join(cursor.column_names) + "\n"
+            results = [','.join(cursor.column_names)]
             for row in cursor:
-                ret_str = ret_str + ','.join([str(x) for x in row]) + "\n"
-            return ret_str
+                results.append(','.join([str(x) for x in row]))
+            return render_template("search_results.html", results=results)
         except Exception as e:
             return "Error :" + str(e)
 
