@@ -105,28 +105,28 @@ def delete_data(request):
 def filter_update_data(request):
     default = "Default"
     data_map = {}
-    data = []
+    # data = []
 
     authors = str(request.form['authors'])
     if authors != default:
         data_map["authors"] = authors
-        data.append(authors)
+        # data.append(authors)
 
     title = str(request.form['title'])
     if title != default:
         data_map["title"] = title
-        data.append(title)
+        # data.append(title)
     abstract = str(request.form['abstract'])
     if abstract != default:
         data_map["abstract"] = abstract
-        data.append(abstract)
+        # data.append(abstract)
 
     journal_id = str(request.form['journal_id'])
     if journal_id != default:
         data_map["journal_id"] = journal_id
-        data.append(journal_id)
+        # data.append(journal_id)
 
-    return data_map, data
+    return data_map
 
 
 def update_data(request):
@@ -135,8 +135,9 @@ def update_data(request):
     cnx = g.cnx
 
     paper_id = str(request.form['paper_id'])
-    data_map, data = filter_update_data(request)
+    data_map= filter_update_data(request)
     if column != [] and data != []:
+        data = list(data_map.values())
         data.append(paper_id)
         data = tuple(data)
         update_query = SQLStrObj.update_paper
