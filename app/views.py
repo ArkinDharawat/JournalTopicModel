@@ -210,9 +210,10 @@ def recommend_data(request):
 
         topics = TopicModelobj.get_topics(title=title, abstract=abstract)
         cursor.callproc("GetTopicCosDist", args=tuple(SQLStrObj.construct_topic_vector(topics)))
+        cnx.commit()  # Commit Bc Tables change
 
-        import code
-        code.interact(local={**locals(), **globals()})
+        # import code
+        # code.interact(local={**locals(), **globals()})
 
         get_top_recommendations = SQLStrObj.get_recommended_papers(top_k=10)  # TODO: Make Argument or Get Global
 
