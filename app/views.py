@@ -29,6 +29,7 @@ def before_request_func():
         config = yaml.safe_load(stream)
     g.cnx = mysql.connector.connect(**config)
     g.cursor = g.cnx.cursor()
+    g.default = ''
 
 
 # static url
@@ -100,7 +101,7 @@ def delete_data(request):
 
 
 def filter_update_data(request):
-    default = "Default"
+    default = g.default
     column = []
     data = []
 
@@ -146,16 +147,13 @@ def update_data(request):
 def search_data(request):
     SQLStrObj = g.SQLStrObj
     cursor = g.cursor
-    default = "Default"
+    default =  g.default
 
     paper_id = str(request.form['paper_id'])
     authors = str(request.form['authors'])
     title = str(request.form['title'])
     abstract = str(request.form['abstract'])
     journal_id = str(request.form['journal_id'])
-
-    import code
-    code.interact(local={**locals(), **globals()})
 
     if paper_id == default and authors == default:
         return "Cannot Search For Result"
