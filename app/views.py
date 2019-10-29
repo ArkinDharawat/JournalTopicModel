@@ -151,14 +151,11 @@ def search_data(request):
 
     paper_id = str(request.form['paper_id'])
     authors = str(request.form['authors'])
-    title = str(request.form['title'])
-    abstract = str(request.form['abstract'])
     journal_id = str(request.form['journal_id'])
 
-    if paper_id == default and authors == default:
+    if paper_id == default and authors == default and journal_id == default:
         return "Cannot Search For Result"
     elif authors != default:
-        print("authors")
         search_authors = SQLStrObj.search_authors()
         try:
             cursor.execute('SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";') # TODO: Fix Query to work with %s
@@ -168,8 +165,17 @@ def search_data(request):
             return render_template("search_results.html", results=results)
         except Exception as e:
             return "Error :" + str(e)
+    elif journal_id != default:
+        search_journal = SQLStrObj.search_journal()
+        try:
+            cursor.execute(search_journal, (journal_id,))
+            results = [','.join(cursor.column_names)]
+            for row in cursor:
+                results.append(','.join([str(x) for x in row]))
+            return render_template("search_results.html", results=results)
+        except Exception as e:
+            return "Error :" + str(e)
     elif paper_id != default:
-        print("paper id")
         search_paper = SQLStrObj.search_paper()
         try:
             cursor.execute(search_paper, (paper_id,))

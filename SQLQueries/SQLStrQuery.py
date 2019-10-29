@@ -83,6 +83,9 @@ class SQLStrQuery(object):
     def search_paper(self):
         return "SELECT * FROM Academic_Paper WHERE Paper_Id = %s;"
 
+    def search_journal(self):
+        return "SELECT * FROM Academic_Paper WHERE Journal_Id = %s;"
+
     def search_authors(self):
         return "SELECT * FROM Academic_Paper WHERE Authors LIKE \"%%s%\";"
 
