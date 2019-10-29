@@ -154,15 +154,15 @@ def search_data(request):
     abstract = str(request.form['abstract'])
     journal_id = str(request.form['journal_id'])
 
+    import code
+    code.interact(local={**locals(), **globals()})
+
     if paper_id == default and authors == default:
         return "Cannot Search For Result"
     elif authors != default:
         print("authors")
         search_authors = SQLStrObj.search_authors()
         try:
-
-            import code
-            code.interact(local={**locals(), **globals()})
             cursor.execute('SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";') # TODO: Fix Query to work with %s
             results = [','.join(cursor.column_names)]
             for row in cursor:
