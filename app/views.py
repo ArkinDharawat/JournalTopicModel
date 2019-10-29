@@ -1,14 +1,12 @@
-from flask import Flask, request, jsonify, render_template, g
-from app import app
+import os
+
 import mysql.connector
 import yaml
-import os
 from SQLQueries.SQLStrQuery import SQLStrQuery
-
-from TopicModel.TopicExtractor import TopicModel
 from TopicModel.TextProcessor import remove_non_ascii
-
-import os
+from TopicModel.TopicExtractor import TopicModel
+from app import app
+from flask import request, render_template, g
 
 INSERT = "Insert"
 DELETE = "Delete"
@@ -147,7 +145,7 @@ def update_data(request):
 def search_data(request):
     SQLStrObj = g.SQLStrObj
     cursor = g.cursor
-    default =  g.default
+    default = g.default
 
     paper_id = str(request.form['paper_id'])
     authors = str(request.form['authors'])
@@ -158,7 +156,8 @@ def search_data(request):
     elif authors != default:
         search_authors = SQLStrObj.search_authors()
         try:
-            cursor.execute('SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";') # TODO: Fix Query to work with %s
+            cursor.execute(
+                'SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";')  # TODO: Fix Query to work with %s
             results = [','.join(cursor.column_names)]
             for row in cursor:
                 results.append(','.join([str(x) for x in row]))
