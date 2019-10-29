@@ -162,6 +162,10 @@ def search_data(request):
         search_paper = SQLStrObj.search_paper()
         try:
             cursor.execute(search_paper, (paper_id,))
+
+            import code
+            code.interact(local={**locals(), **globals()})
+
             ret_str = ','.join(cursor.column_names) + "\n"
             for row in cursor:
                 ret_str = ret_str + ','.join(list(row)) + "\n"
