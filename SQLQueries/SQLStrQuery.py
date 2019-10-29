@@ -90,6 +90,8 @@ class SQLStrQuery(object):
         return "SELECT * FROM Academic_Paper WHERE Authors LIKE \"%%s%\";"
 
     def get_recommended_papers(self, top_k):
+        if top_k < self.num_topics:
+            top_k = self.num_topics
         return "SELECT * FROM temp_topic_table T JOIN FROM Academic_Paper P ON T.Paper_Id = P.Paper_Id ORDER BY CosineDistance DESC LIMIT" + str(top_k) + ";"
 
 
