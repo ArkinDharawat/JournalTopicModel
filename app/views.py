@@ -12,6 +12,7 @@ INSERT = "Insert"
 DELETE = "Delete"
 UPDATE = "Update"
 SEARCH = "Search"
+RECOMMEND = "Recommend"
 
 
 @app.before_first_request
@@ -48,6 +49,8 @@ def insert_endpoint():
         return update_data(request)
     elif action == SEARCH:
         return search_data(request)
+    elif action == RECOMMEND:
+        return recommend_data(request)
 
 
 def insert_data(request):
@@ -186,6 +189,41 @@ def search_data(request):
             return "Error :" + str(e)
 
     return "Nothing Searched For"
+
+
+def recommend_data(request):
+    SQLStrObj = g.SQLStrObj
+    TopicModelobj = g.TopicModelobj
+    cursor = g.cursor
+    cnx = g.cnx
+    default = g.default
+
+    paper_id = str(request.form['paper_id'])
+    authors = str(request.form['authors'])
+    title = str(request.form['title'])
+    abstract = str(request.form['abstract'])
+    journal_id = str(request.form['journal_id'])
+
+    if title != default and abstract != default:
+        title = remove_non_ascii(title)
+        abstract = remove_non_ascii(abstract)
+
+        topics = TopicModelobj.get_topics(title=title, abstract=abstract)
+        cursor.callproc("GetTopicCosDist", args=tuple(topics))
+
+        get_top_recommendations = SQLStrQuery.get_recommended_papers(10)  # TODO: Make Argument or Get Global
+
+        try:
+            cursor.execute(get_top_recommendations)
+            results = [','.join(cursor.column_names)]
+            for row in cursor:
+                results.append(','.join([str(x) for x in row]))
+            return render_template("search_results.html", results=results)
+        except Exception as e:
+            return "Error :" + str(e)
+
+    else:
+        return "Cannot Recommend Any Articles. Try Search"
 
 
 @app.after_request
