@@ -24,7 +24,7 @@ def before_first_request_func():
 def before_request_func():
     g.SQLStrObj = SQLStrQuery(10)
     g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
-    with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
+    with open(os.path.join(os.getcwd(), "config.yaml"), 'r') as stream:
         config = yaml.safe_load(stream)
     g.cnx = mysql.connector.connect(**config)
     g.cursor = g.cnx.cursor()
