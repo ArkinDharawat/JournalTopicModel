@@ -5,6 +5,7 @@ botocore==1.13.0
 certifi==2019.9.11
 chardet==3.0.4
 Click==7.0
+colorama==0.4.1
 cymem==2.0.2
 docutils==0.15.2
 en-core-web-sm==2.2.0
@@ -17,11 +18,17 @@ jmespath==0.9.4
 MarkupSafe==1.1.1
 murmurhash==1.0.2
 mysql-connector==2.2.9
+neo4j==1.7.5
+neobolt==1.7.15
+neotime==1.7.4
 nltk==3.4.5
 numpy==1.17.3
 pandas==0.25.2
 plac==0.9.6
 preshed==3.0.2
+prompt-toolkit==2.0.10
+py2neo==4.3.0
+Pygments==2.3.1
 python-dateutil==2.8.0
 pytz==2019.3
 PyYAML==5.1.2
@@ -34,6 +41,7 @@ spacy==2.2.1
 srsly==0.1.0
 thinc==7.1.1
 tqdm==4.36.1
-urllib3==1.25.6
+urllib3==1.24.3
 wasabi==0.2.2
+wcwidth==0.1.7
 Werkzeug==0.16.0
