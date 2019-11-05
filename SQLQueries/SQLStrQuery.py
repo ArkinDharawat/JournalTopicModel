@@ -48,7 +48,7 @@ class SQLStrQuery(object):
     def construct_topic_vector(self, topic_indices):
         value_str = ["0.0"] * self.num_topics
         for ind,val in topic_indices:
-            value_str[ind - 1] = val
+            value_str[ind - 1] = str(round(val, 2))
         return value_str
 
     def insert_journal(self):
