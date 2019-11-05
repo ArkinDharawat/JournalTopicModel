@@ -76,6 +76,7 @@ def insert_data(request):
 
     topics = TopicModelobj.get_topics(title=title, abstract=abstract)
     topic_vec = SQLStrObj.construct_topic_vector(topics)
+    print(topic_vec)
     insert_topic_query = SQLStrObj.insert_topic(paper_id, topic_vec)
     try:
         cursor.execute(insert_paper_query, (paper_id, authors, journal_id, title, abstract))
