@@ -70,6 +70,8 @@ class SQLStrQuery(object):
         value_str = self.construct_topic_vector(topic_indices)
         value_str = ",".join(value_str)
 
+        print(topic_str, value_str)
+
         return "INSERT INTO Topics_per_Paper (Paper_Id, " + topic_str + ") VALUES (" + \
                str(paper_id) + "," + value_str + ");"
 
