@@ -39,16 +39,16 @@ class SQLStrQuery(object):
 
         topic_values = ["Paper_Id INTEGER NOT NULL"]
         for i in range(self.num_topics):
-            topic_values.append("Topic{0} INTEGER".format(i))
+            topic_values.append("Topic{0} REAL".format(i))
         value_str = ",".join(topic_values)
         table_topic = "CREATE TABLE Topics_per_Paper (" + value_str + ", FOREIGN KEY(Paper_Id) REFERENCES Academic_Paper(Paper_Id));"
 
         return [table_acad_journal, table_acad_paper, table_topic]
 
     def construct_topic_vector(self, topic_indices):
-        value_str = ["0"] * self.num_topics
-        for k in topic_indices:
-            value_str[k - 1] = "1"
+        value_str = ["0.0"] * self.num_topics
+        for ind,val in topic_indices:
+            value_str[ind - 1] = val
         return value_str
 
     def insert_journal(self):

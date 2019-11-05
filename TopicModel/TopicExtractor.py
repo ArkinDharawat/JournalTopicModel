@@ -17,7 +17,7 @@ class TopicModel(object):
         text = apply_tokenization(title, abstract)
         text_doc_bow = self.dictionary.doc2bow(text)
         topics = self.ldamodel.get_document_topics(text_doc_bow)
-        return [x[0] for x in topics]
+        return topics
 
 
 if __name__ == '__main__':
