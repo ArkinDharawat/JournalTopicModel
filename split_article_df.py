@@ -6,8 +6,8 @@ import logging
 logger = logging.getLogger("split-script")
 
 chunksize = 10 ** 3
-df_full = pd.read_csv("/home/projet/data/AllArticles.csv", chunksize=chunksize, header=None)
-journal_df = pd.read_csv("/home/projet/data/journalslist.csv")
+df_full = pd.read_csv("/home/project/data/AllArticles.csv", chunksize=chunksize, header=None)
+journal_df = pd.read_csv("/home/project/data/journalslist.csv")
 
 field_count = defaultdict(lambda x: 0)
 
