@@ -16,10 +16,13 @@ with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
 
 
 """
+SQL: ALTER TABLE Academic_Journal ADD Rank INTEGER DEFAULT 0;
+"""
+"""
 df = pd.read_csv("/home/project/data/JournalRankings.csv")
 df1 = pd.read_csv("/home/project/data/journalslist.csv")
 jounral_id_rankings = df1.merge(df,  left_on='journal', right_on='journal_name')
-journal_rankings = jounral_id_rankings[["journal_id", "ranking"]].groupby(by="journal_id").max()
+journal_rankings = jounral_id_rankings[["journal_id", "ranking"]].groupby(by="journal_id").max().reset_index()
 """
 
 journal_id_rank_df = pd.read_csv(os.path.join("/home/project/data/JournalIdRankings.csv"))
