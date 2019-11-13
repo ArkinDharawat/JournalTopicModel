@@ -9,7 +9,7 @@ chunksize = 10 ** 3
 df_full = pd.read_csv("/home/project/data/AllArticles.csv", chunksize=chunksize, header=None)
 journal_df = pd.read_csv("/home/project/data/journalslist.csv")
 
-field_count = defaultdict(lambda x: 0)
+field_count = defaultdict(lambda : 0)
 
 logger.info("datasets loaded")
 
