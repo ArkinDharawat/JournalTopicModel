@@ -20,7 +20,6 @@ df = pd.read_csv("/home/project/data/JournalRankings.csv")
 df1 = pd.read_csv("/home/project/data/journalslist.csv")
 jounral_id_rankings = df1.merge(df,  left_on='journal', right_on='journal_name')
 journal_rankings = jounral_id_rankings[["journal_id", "ranking"]].groupby(by="journal_id").max()
-
 """
 
 journal_id_rank_df = pd.read_csv(os.path.join("/home/project/data/JournalIdRankings.csv"))
@@ -33,7 +32,7 @@ logger.info("Created Cursor")
 
 for id, row in journal_id_rank_df.iterrows():
     journal_id, rank = row.values
-    cursor.execute("UPDATE Academic_Journal SET Rank=%s WHERE Journal_Id=%s", (rank, journal_id))
+    cursor.execute("UPDATE Academic_Journal SET Rank = %s WHERE Journal_Id = %s", (rank, journal_id))
     cnx.commit()  # Commit one row at a time
 
 cursor.close()
