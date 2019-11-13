@@ -32,7 +32,7 @@ logger.info("Created Cursor")
 
 for id, row in journal_id_rank_df.iterrows():
     journal_id, rank = row.values
-    cursor.execute("UPDATE Academic_Journal SET Rank = %s WHERE Journal_Id = %s", (rank, journal_id))
+    cursor.execute("UPDATE Academic_Journal SET Rank="+ str(rank) + " WHERE Journal_Id=" + str(journal_id))
     cnx.commit()  # Commit one row at a time
 
 cursor.close()
