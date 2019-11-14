@@ -19,9 +19,12 @@ for chunk in df_full:
     df_chunked = chunk.iloc[:, [1, 2, 9, 10, 13]]
     df_chunked.columns = ["title", "author", "url", "abstract", "journal_id"]
     for id, row in df_chunked.iterrows():
-        topics = journal_df[journal_df["journal_id"] == row["journal_id"]]["field"].values[0].split(";")
-        for t in topics:
-            field_count[t] += 1
+        try:
+            topics = journal_df[journal_df["journal_id"] == row["journal_id"]]["field"].values[0].split(";")
+            for t in topics:
+                field_count[t] += 1
+        except:
+            continue
     i += 1
 print("Sorting and Printing")
 import operator
