@@ -15,18 +15,22 @@ print("datasets loaded")
 
 i = 0
 for chunk in df_full:
+    if i > 1000:
+        break # Iterate only till the 1000th chunk
+
     print("At chunk: {0}".format(i))
     df_chunked = chunk.iloc[:, [1, 2, 9, 10, 13]]
     df_chunked.columns = ["title", "author", "url", "abstract", "journal_id"]
+
     for id, row in df_chunked.iterrows():
         topics = journal_df[journal_df["journal_id"] == row["journal_id"]]["field"].values[0].split(";")
         try:
             for k in keywords:
                 if k in topics:
                     df_subset = df_subset.append(row, ignore_index=False)
+                    break
         except:
-            import code
-            code.interact(local={**locals(), **globals()})
+            continue
         # try:
         #     topics = journal_df[journal_df["journal_id"] == row["journal_id"]]["field"].values[0].split(";")
         #     for t in topics:
@@ -34,6 +38,9 @@ for chunk in df_full:
         # except:
         #     continue
     i += 1
+
+df_subset.to_csv("/home/project/data/AllArticles_Subset.csv", index=False)
+
 # print("Sorting and Printing")
 # import operator
 # sorted_x = sorted(field_count.items(), key=operator.itemgetter(1))
