@@ -43,6 +43,17 @@ def prepare_text_for_lda(text):
     return tokens
 
 
+def apply_tokenization_row(r):
+    title = r["title"]
+    abstract = r["abstract"]
+    word = ""
+    if not isinstance(title, float):
+        word += title
+    if not isinstance(abstract, float):
+        word += abstract
+    return prepare_text_for_lda(word)
+
+
 def apply_tokenization(title, abstract):
     word = ""
     word += remove_non_ascii(title)
