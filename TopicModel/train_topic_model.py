@@ -1,10 +1,10 @@
-import gensim
-from gensim import corpora, models
-import pickle
 import os
-import pandas as pd
+import pickle
 
+import gensim
+import pandas as pd
 from TextProcessor import apply_tokenization_row
+from gensim import corpora, models
 
 NUM_TOPICS = 10
 MULTICORE = True
