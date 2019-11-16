@@ -1,15 +1,15 @@
 import pandas as pd
 from collections import defaultdict
 
-import logging
-
-logger = logging.getLogger("split-script")
+keywords = ["Finance", "Economics"]
 
 chunksize = 10 ** 3
 df_full = pd.read_csv("/home/project/data/AllArticles.csv", chunksize=chunksize, header=None)
 journal_df = pd.read_csv("/home/project/data/journalslist.csv")
 
-field_count = defaultdict(lambda : 0)
+# field_count = defaultdict(lambda : 0)
+
+df_subset = pd.DataFrame(columns=["title", "author", "url", "abstract", "journal_id"])
 
 print("datasets loaded")
 
@@ -19,15 +19,23 @@ for chunk in df_full:
     df_chunked = chunk.iloc[:, [1, 2, 9, 10, 13]]
     df_chunked.columns = ["title", "author", "url", "abstract", "journal_id"]
     for id, row in df_chunked.iterrows():
+        topics = journal_df[journal_df["journal_id"] == row["journal_id"]]["field"].values[0].split(";")
         try:
-            topics = journal_df[journal_df["journal_id"] == row["journal_id"]]["field"].values[0].split(";")
-            for t in topics:
-                field_count[t] += 1
+            for k in keywords:
+                if k in topics:
+                    df_subset = df_subset.append(row, ignore_index=False)
         except:
-            continue
+            import code
+            code.interact(local={**locals(), **globals()})
+        # try:
+        #     topics = journal_df[journal_df["journal_id"] == row["journal_id"]]["field"].values[0].split(";")
+        #     for t in topics:
+        #         field_count[t] += 1
+        # except:
+        #     continue
     i += 1
-print("Sorting and Printing")
-import operator
-sorted_x = sorted(field_count.items(), key=operator.itemgetter(1))
-for x in sorted_x:
-    print(x)
+# print("Sorting and Printing")
+# import operator
+# sorted_x = sorted(field_count.items(), key=operator.itemgetter(1))
+# for x in sorted_x:
+#     print(x)
