@@ -4,7 +4,7 @@ import pickle
 import os
 import pandas as pd
 
-from TopicModel.TextProcessor import apply_tokenization_row
+from TextProcessor import apply_tokenization_row
 
 NUM_TOPICS = 10
 MULTICORE = True
