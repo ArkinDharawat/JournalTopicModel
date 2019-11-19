@@ -40,15 +40,12 @@ def run_model():
     model_params = {"corpus": corpus,
                     "num_topics": NUM_TOPICS,
                     "id2word": dictionary,
-                    "passes": 15,
+                    "passes": 10,
                     "random_state": 42}
     if MULTICORE:
         ldamodel = gensim.models.ldamulticore.LdaMulticore(**model_params)
     else:
         ldamodel = gensim.models.ldamodel.LdaModel(**model_params)
-    topics = ldamodel.print_topics(num_words=4)
-    for topic in topics:
-        print(topic)
 
     ldamodel.save(os.path.join(MODEL_FOLDER, 'model5.gensim'))
 
