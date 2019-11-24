@@ -23,7 +23,8 @@ def add_journal_nodes():
             ranking = ranking[0]
         # print(name, id, field, ranking)
         journal_node = Node("Journal", name=name, id=id, field=field, ranking=ranking)
-        graph.push(journal_node)
+        graph.create(journal_node)
+
 
 def add_paper_nodes():
     pass
