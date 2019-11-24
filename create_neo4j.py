@@ -18,7 +18,7 @@ def add_journal_nodes():
         name, id, field = row.values
         ranking = journal_rankings[journal_rankings["journal_id"] == id]["ranking"].values
         if len(ranking) == 0:
-            ranking = -1
+            ranking = 0
         else:
             ranking = ranking[0]
         # print(name, id, field, ranking)
