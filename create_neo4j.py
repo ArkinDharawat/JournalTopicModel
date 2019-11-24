@@ -18,11 +18,11 @@ def add_journal_nodes():
         name, id, field = row.values
         ranking = journal_rankings[journal_rankings["journal_id"] == id]["ranking"].values
         if len(ranking) == 0:
-            ranking = 0
+            ranking = -1
         else:
             ranking = ranking[0]
         # print(name, id, field, ranking)
-        journal_node = Node("Journal", name=name, id=id, field=field, ranking=ranking)
+        journal_node = Node("Journal", name=name, id=int(id), field=field, ranking=int(ranking))
         graph.create(journal_node)
 
 
