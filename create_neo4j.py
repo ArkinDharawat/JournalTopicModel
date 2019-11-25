@@ -27,8 +27,13 @@ def add_journal_nodes():
 
 
 def add_paper_nodes():
-    pass
+    # TODO: Add paper and link to corresponding journal
+    articles_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/AllArticles_Subset.csv"))
+    for id, row in articles_df.iterrows():
+        title, author, url, abstract, journal_id = row.values
+        journal_node = graph.nodes.match("Journal", id=int(journal_id))
+        import code
+        code.interact(local={**locals(), **globals()})
 
-add_journal_nodes()
-import code
-code.interact(local={**locals(), **globals()})
+# add_journal_nodes()
+
