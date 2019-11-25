@@ -30,7 +30,6 @@ def build_data():
     corpus = [dictionary.doc2bow(doc) for doc in text_data]  # Recompute corpus
 
     pickle.dump(corpus, open(os.path.join(MODEL_FOLDER, 'corpus.pkl'), 'wb'))
-    tfidf.save("/home/project/data/dictionary.gensim")
     dictionary.save(os.path.join(MODEL_FOLDER, 'dictionary.gensim'))
 
 
