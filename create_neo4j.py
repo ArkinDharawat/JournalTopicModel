@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 import yaml
-from py2neo import Graph, Node
+from py2neo import Graph, Node, Relationship
 
 with open(os.path.join(os.getcwd(), "config_neo.yml"), 'r') as stream:
     config = yaml.safe_load(stream)
@@ -31,11 +31,14 @@ def add_paper_nodes():
     articles_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/AllArticles_Subset.csv"))
     for id, row in articles_df.iterrows():
         title, author, url, abstract, journal_id = row.values
-        journal_node = graph.nodes.match("Journal", id=int(journal_id))
+        paper_node = Node("Paper", title=title, id=int(id), authors=author, abstract=abstract)
+        graph.create(paper_node)
+        journal_node = graph.nodes.match("Journal", id=int(journal_id)).first()
+        graph.create(Relationship(paper_node, "PUBLISHED", journal_node))
 
-        import code
-        code.interact(local={**locals(), **globals()})
+
 
 # add_journal_nodes()
-
 add_paper_nodes()
+import code
+code.interact(local={**locals(), **globals()})
