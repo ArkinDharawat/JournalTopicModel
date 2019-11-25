@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 import yaml
-from py2neo import Graph, Node, Relationship
+from py2neo import Graph, Node
 
 with open(os.path.join(os.getcwd(), "config_neo.yml"), 'r') as stream:
     config = yaml.safe_load(stream)
@@ -32,8 +32,10 @@ def add_paper_nodes():
     for id, row in articles_df.iterrows():
         title, author, url, abstract, journal_id = row.values
         journal_node = graph.nodes.match("Journal", id=int(journal_id))
+
         import code
         code.interact(local={**locals(), **globals()})
 
 # add_journal_nodes()
 
+add_paper_nodes()
