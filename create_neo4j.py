@@ -27,7 +27,6 @@ def add_journal_nodes():
 
 
 def add_paper_nodes():
-    # TODO: Add paper and link to corresponding journal
     articles_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/AllArticles_Subset.csv"))
     for id, row in articles_df.iterrows():
         title, author, url, abstract, journal_id = row.values
@@ -40,5 +39,4 @@ def add_paper_nodes():
 
 # add_journal_nodes()
 # add_paper_nodes()
-import code
-code.interact(local={**locals(), **globals()})
+# Exmaplee query: d = graph.run("MATCH (p:Paper)-[:PUBLISHED]->(j:Journal {id:1}) RETURN p.title").data()
