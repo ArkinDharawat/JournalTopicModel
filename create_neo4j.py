@@ -39,6 +39,6 @@ def add_paper_nodes():
 
 
 # add_journal_nodes()
-add_paper_nodes()
+# add_paper_nodes()
 import code
 code.interact(local={**locals(), **globals()})
