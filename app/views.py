@@ -26,6 +26,7 @@ def before_request_func():
 
     g.SQLStrObj = SQLStrQuery(10, config)
     g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
+    g.default = ''
 
 
 # static url
