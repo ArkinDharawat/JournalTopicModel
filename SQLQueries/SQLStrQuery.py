@@ -109,10 +109,10 @@ class SQLStrQuery(object):
             self.cursor.execute(query_str, tuple(args))
         except Exception as e:
             print("Error :" + str(e))
-            return False
+            return False, e
 
         self.cnx.commit()
-        return True
+        return True, self.cursor
 
     def close_db(self):
         self.cursor.close()
