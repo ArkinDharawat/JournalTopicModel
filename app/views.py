@@ -24,7 +24,7 @@ def before_request_func():
     with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
         config = yaml.safe_load(stream)
 
-    g.SQLStrObj = SQLStrQuery(10, config)
+    g.db_obj = SQLStrQuery(10, config)
     g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
     g.default = ''
 
@@ -56,7 +56,7 @@ def insert_endpoint():
 
 
 def insert_data(request):
-    SQLStrObj = g.SQLStrObj
+    SQLStrObj = g.db_obj
     TopicModelobj = g.TopicModelobj
 
     paper_id = str(request.form['paper_id'])
@@ -85,7 +85,7 @@ def insert_data(request):
 
 
 def delete_data(request):
-    SQLStrObj = g.SQLStrObj
+    SQLStrObj = g.db_obj
 
     paper_id = str(request.form['paper_id'])
     delete_paper_query = SQLStrObj.delete_paper()
@@ -126,7 +126,7 @@ def filter_update_data(request):
 
 
 def update_data(request):
-    SQLStrObj = g.SQLStrObj
+    SQLStrObj = g.db_obj
 
     paper_id = str(request.form['paper_id'])
 
@@ -149,7 +149,7 @@ def update_data(request):
 
 
 def search_data(request):
-    SQLStrObj = g.SQLStrObj
+    SQLStrObj = g.db_obj
     default = g.default
 
     paper_id = str(request.form['paper_id'])
@@ -191,7 +191,7 @@ def search_data(request):
 
 
 def recommend_data(request):
-    SQLStrObj = g.SQLStrObj
+    SQLStrObj = g.db_obj
     TopicModelobj = g.TopicModelobj
     default = g.default
 
@@ -226,5 +226,5 @@ def recommend_data(request):
 
 @app.after_request
 def after_request_func(response):
-    g.SQLStrObj.close_db()
+    g.db_obj.close_db()
     return response

@@ -111,7 +111,7 @@ class SQLStrQuery(object):
             print("Error :" + str(e))
             return False, e
         if commit:
-            self.cnx.commit() # Queries that need to be commited
+            self.cnx.commit()  # Queries that need to be commited
 
         return True, self.cursor
 
@@ -122,10 +122,9 @@ class SQLStrQuery(object):
             print("Error :" + str(e))
             return False, e
 
-        self.cnx.commit() # Commit Bc Tables change
+        self.cnx.commit()  # Commit Bc Tables change
 
         return True, self.cursor
-
 
     def close_db(self):
         self.cursor.close()
