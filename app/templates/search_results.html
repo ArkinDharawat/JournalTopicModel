@@ -18,18 +18,14 @@
         tr:nth-child(even) {
             background-color: #f2f2f2
         }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
     </style>
 </head>
 <body>
     <table class="centered thick-border">
         {% for k in results %}
                 <tr>
-                        <td>{{ k }}</td>
+                     {% for v in k %}
+                        <td>{{ v }}</td>
                 </tr>
         {% endfor %}
 </table>
