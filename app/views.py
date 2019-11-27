@@ -193,8 +193,6 @@ def search_data(request):
 def recommend_data(request):
     SQLStrObj = g.SQLStrObj
     TopicModelobj = g.TopicModelobj
-    cursor = g.cursor
-    cnx = g.cnx
     default = g.default
 
     paper_id = str(request.form['paper_id'])
@@ -208,19 +206,19 @@ def recommend_data(request):
         abstract = remove_non_ascii(abstract)
 
         topics = TopicModelobj.get_topics(title=title, abstract=abstract)
-        cursor.callproc("GetTopicCosDist", args=tuple(SQLStrObj.construct_topic_vector(topics)))
-        cnx.commit()  # Commit Bc Tables change
+        query_bool, result = SQLStrObj.execute_topic_proc(topics)
+        if not query_bool:
+            return result
 
         get_top_recommendations = SQLStrObj.get_recommended_papers(top_k=10)  # TODO: Make Argument or Get Global
 
-        try:
-            cursor.execute(get_top_recommendations)
-            results = [','.join(cursor.column_names)]
-            for row in cursor:
-                results.append(','.join([str(x) for x in row]))
-            return render_template("search_results.html", results=results)
-        except Exception as e:
-            return "Error :" + str(e)
+        query_bool, result = SQLStrObj.execute_query(get_top_recommendations, [], False)
+        if not query_bool:
+            return result
+        results = [','.join(result.column_names)]
+        for row in result:
+            results.append(','.join([str(x) for x in row]))
+        return render_template("search_results.html", results=results)
 
     else:
         return "Cannot Recommend Any Articles. Try Search"

@@ -105,9 +105,6 @@ class SQLStrQuery(object):
             top_k) + ";"
 
     def execute_query(self, query_str, args=[], commit=True):
-        import code
-        code.interact(local={**locals(), **globals()})
-
         try:
             self.cursor.execute(query_str, tuple(args))
         except Exception as e:
@@ -117,6 +114,18 @@ class SQLStrQuery(object):
             self.cnx.commit() # Queries that need to be commited
 
         return True, self.cursor
+
+    def execute_topic_proc(self, topics):
+        try:
+            self.cursor.callproc("GetTopicCosDist", args=tuple(self.construct_topic_vector(topics)))
+        except Exception as e:
+            print("Error :" + str(e))
+            return False, e
+
+        self.cnx.commit() # Commit Bc Tables change
+
+        return True, self.cursor
+
 
     def close_db(self):
         self.cursor.close()
