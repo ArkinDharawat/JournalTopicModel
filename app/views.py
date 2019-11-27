@@ -72,12 +72,12 @@ def insert_data(request):
     topics = TopicModelobj.get_topics(title=title, abstract=abstract)
 
     insert_topic_query = SQLStrObj.insert_topic(paper_id, topics)
-    query1 = SQLStrObj.execute_query(insert_paper_query, [paper_id, authors, journal_id, title, abstract])
-    if not query1:
+    query_bool, result = SQLStrObj.execute_query(insert_paper_query, [paper_id, authors, journal_id, title, abstract])
+    if not query_bool:
         return "INSERTION ERROR"
 
-    query2 = SQLStrObj.execute_query(insert_topic_query)
-    if not query2:
+    query_bool, result = SQLStrObj.execute_query(insert_topic_query)
+    if not query_bool:
         return "INSERTION ERROR"
 
     return "INSERTION SUCCESSFULL"
@@ -90,12 +90,12 @@ def delete_data(request):
     delete_paper_query = SQLStrObj.delete_paper()
     delete_topic = SQLStrObj.delete_topic()
 
-    query1 = SQLStrObj.execute_query(delete_topic, [paper_id])
-    if not query1:
+    query_bool, result = SQLStrObj.execute_query(delete_topic, [paper_id])
+    if not query_bool:
         return "DELETE ERROR"
 
-    query2 = SQLStrObj.execute_query(delete_paper_query, [paper_id])
-    if not query2:
+    query_bool, result = SQLStrObj.execute_query(delete_paper_query, [paper_id])
+    if not query_bool:
         return "DELETE ERROR"
 
     return "DELETION SUCCESSFULL"
@@ -126,8 +126,6 @@ def filter_update_data(request):
 
 def update_data(request):
     SQLStrObj = g.SQLStrObj
-    cursor = g.cursor
-    cnx = g.cnx
 
     paper_id = str(request.form['paper_id'])
 
@@ -140,21 +138,17 @@ def update_data(request):
     data.append(paper_id)
 
     # TODO: Add Update for Topics if title/abstract updated
-
     if column != [] and data != []:
         update_query = SQLStrObj.update_paper(column)
-        try:
-            cursor.execute(update_query, tuple(data))
-        except Exception as e:
-            return "Error :" + str(e)
-        cnx.commit()
+        query_res, err = SQLStrObj.execute_query(update_query, data)
+        if not query_res:
+            return "UPDATE ERROR"
 
     return "UPDATE SUCCESSFULL"
 
 
 def search_data(request):
     SQLStrObj = g.SQLStrObj
-    cursor = g.cursor
     default = g.default
 
     paper_id = str(request.form['paper_id'])
@@ -164,36 +158,33 @@ def search_data(request):
     if paper_id == default and authors == default and journal_id == default:
         return "Cannot Search For Result"
     elif authors != default:
-        search_authors = SQLStrObj.search_authors()  # TODO: Fix Query to work with %s
-        try:
-            cursor.execute(
-                'SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";')
-            results = [','.join(cursor.column_names)]
-            for row in cursor:
-                results.append(','.join([str(x) for x in row]))
-            return render_template("search_results.html", results=results)
-        except Exception as e:
-            return "Error :" + str(e)
+        query_bool, result = SQLStrObj.execute_query('SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";')
+        if not query_bool:
+            return result
+        results = [','.join(result.column_names)]
+        for row in result:
+            results.append(','.join([str(x) for x in row]))
+        return render_template("search_results.html", results=results)
+
     elif journal_id != default:
         search_journal = SQLStrObj.search_journal()
-        try:
-            cursor.execute(search_journal, (journal_id,))
-            results = [','.join(cursor.column_names)]
-            for row in cursor:
-                results.append(','.join([str(x) for x in row]))
-            return render_template("search_results.html", results=results)
-        except Exception as e:
-            return "Error :" + str(e)
+        query_bool, result = SQLStrObj.execute_query(search_journal, journal_id)
+        if not query_bool:
+            return result
+        results = [','.join(result.column_names)]
+        for row in result:
+            results.append(','.join([str(x) for x in row]))
+        return render_template("search_results.html", results=results)
+
     elif paper_id != default:
         search_paper = SQLStrObj.search_paper()
-        try:
-            cursor.execute(search_paper, (paper_id,))
-            results = [','.join(cursor.column_names)]
-            for row in cursor:
-                results.append(','.join([str(x) for x in row]))
-            return render_template("search_results.html", results=results)
-        except Exception as e:
-            return "Error :" + str(e)
+        query_bool, result = SQLStrObj.execute_query(search_paper, paper_id)
+        if not query_bool:
+            return result
+        results = [','.join(result.column_names)]
+        for row in result:
+            results.append(','.join([str(x) for x in row]))
+        return render_template("search_results.html", results=results)
 
     return "Nothing Searched For"
 
