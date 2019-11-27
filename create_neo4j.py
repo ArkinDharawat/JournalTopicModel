@@ -52,6 +52,9 @@ def add_topic_nodes(k=10):
                 topic_node = topic_nodes[i-1]
                 graph.create(Relationship(paper_node, "TopicOf", topic_node))
 
+    import code
+    code.interact(local={**locals(), **globals()})
+
 
 # add_journal_nodes()
 # add_paper_nodes()
