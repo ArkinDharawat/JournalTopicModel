@@ -169,7 +169,7 @@ def search_data(request):
 
     elif journal_id != default:
         search_journal = SQLStrObj.search_journal()
-        query_bool, result = SQLStrObj.execute_query(search_journal, journal_id)
+        query_bool, result = SQLStrObj.execute_query(search_journal, [journal_id])
         if not query_bool:
             return result
         results = [','.join(result.column_names)]
@@ -178,12 +178,8 @@ def search_data(request):
         return render_template("search_results.html", results=results)
 
     elif paper_id != default:
-
-        import code
-        code.interact(local={**locals(), **globals()})
-
         search_paper = SQLStrObj.search_paper()
-        query_bool, result = SQLStrObj.execute_query(search_paper, paper_id)
+        query_bool, result = SQLStrObj.execute_query(search_paper, [paper_id])
         if not query_bool:
             return result
         results = [','.join(result.column_names)]
