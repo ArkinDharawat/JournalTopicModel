@@ -51,7 +51,7 @@ def add_topic_nodes(k=10):
         code.interact(local={**locals(), **globals()})
         for i in range(1, len(vals)):
             if vals[i] == 1:
-                topic_node = graph.nodes.match("Topic", id=int(i-1)).first()
+                topic_node = graph.nodes.match("Topic", no=int(i-1)).first()
                 graph.create(Relationship(paper_node, "TopicOf", topic_node))
 
 
