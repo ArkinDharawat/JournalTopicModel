@@ -162,7 +162,7 @@ def search_data(request):
         query_bool, result = SQLStrObj.execute_query(query_str='SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";', commit=False)
         if not query_bool:
             return result
-        results = [result.column_names]
+        results = []
         for row in result:
             results.append([str(x) for x in row])
         return render_template("search_results.html", results=results)
@@ -172,7 +172,7 @@ def search_data(request):
         query_bool, result = SQLStrObj.execute_query(search_journal, [journal_id], False)
         if not query_bool:
             return result
-        results = [result.column_names]
+        results = []
         for row in result:
             results.append([str(x) for x in row])
         return render_template("search_results.html", results=results)
@@ -182,7 +182,7 @@ def search_data(request):
         query_bool, result = SQLStrObj.execute_query(search_paper, [paper_id], False)
         if not query_bool:
             return result
-        results = [result.column_names]
+        results = []
         for row in result:
             results.append([str(x) for x in row])
         return render_template("search_results.html", results=results)
@@ -215,7 +215,7 @@ def recommend_data(request):
         query_bool, result = SQLStrObj.execute_query(get_top_recommendations, [], False)
         if not query_bool:
             return result
-        results = [result.column_names]
+        results = []
         for row in result:
             results.append([str(x) for x in row])
         return render_template("search_results.html", results=results)
