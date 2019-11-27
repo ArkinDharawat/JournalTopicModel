@@ -159,7 +159,7 @@ def search_data(request):
     if paper_id == default and authors == default and journal_id == default:
         return "Cannot Search For Result"
     elif authors != default:
-        query_bool, result = SQLStrObj.execute_query('SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";')
+        query_bool, result = SQLStrObj.execute_query(query_str='SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";', commit=False)
         if not query_bool:
             return result
         results = [','.join(result.column_names)]
@@ -169,7 +169,7 @@ def search_data(request):
 
     elif journal_id != default:
         search_journal = SQLStrObj.search_journal()
-        query_bool, result = SQLStrObj.execute_query(search_journal, [journal_id])
+        query_bool, result = SQLStrObj.execute_query(search_journal, [journal_id], False)
         if not query_bool:
             return result
         results = [','.join(result.column_names)]
@@ -179,7 +179,7 @@ def search_data(request):
 
     elif paper_id != default:
         search_paper = SQLStrObj.search_paper()
-        query_bool, result = SQLStrObj.execute_query(search_paper, [paper_id])
+        query_bool, result = SQLStrObj.execute_query(search_paper, [paper_id], False)
         if not query_bool:
             return result
         results = [','.join(result.column_names)]

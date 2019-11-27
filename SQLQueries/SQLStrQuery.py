@@ -104,7 +104,7 @@ class SQLStrQuery(object):
         return "SELECT * FROM temp_topic_table T JOIN Academic_Paper P ON T.Paper_Id = P.Paper_Id ORDER BY CosineDistance DESC LIMIT " + str(
             top_k) + ";"
 
-    def execute_query(self, query_str, args=[]):
+    def execute_query(self, query_str, args=[], commit=True):
         import code
         code.interact(local={**locals(), **globals()})
 
@@ -113,8 +113,9 @@ class SQLStrQuery(object):
         except Exception as e:
             print("Error :" + str(e))
             return False, e
+        if commit:
+            self.cnx.commit() # Queries that need to be commited
 
-        self.cnx.commit()
         return True, self.cursor
 
     def close_db(self):
