@@ -162,9 +162,9 @@ def search_data(request):
         query_bool, result = SQLStrObj.execute_query(query_str='SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";', commit=False)
         if not query_bool:
             return result
-        results = [','.join(result.column_names)]
+        results = [result.column_names]
         for row in result:
-            results.append(','.join([str(x) for x in row]))
+            results.append([str(x) for x in row])
         return render_template("search_results.html", results=results)
 
     elif journal_id != default:
@@ -172,9 +172,9 @@ def search_data(request):
         query_bool, result = SQLStrObj.execute_query(search_journal, [journal_id], False)
         if not query_bool:
             return result
-        results = [','.join(result.column_names)]
+        results = [result.column_names]
         for row in result:
-            results.append(','.join([str(x) for x in row]))
+            results.append([str(x) for x in row])
         return render_template("search_results.html", results=results)
 
     elif paper_id != default:
@@ -182,9 +182,9 @@ def search_data(request):
         query_bool, result = SQLStrObj.execute_query(search_paper, [paper_id], False)
         if not query_bool:
             return result
-        results = [','.join(result.column_names)]
+        results = [result.column_names]
         for row in result:
-            results.append(','.join([str(x) for x in row]))
+            results.append([str(x) for x in row])
         return render_template("search_results.html", results=results)
 
     return "Nothing Searched For"
