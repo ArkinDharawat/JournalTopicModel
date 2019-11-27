@@ -47,8 +47,6 @@ def add_topic_nodes(k=10):
         vals = row.values
         index = vals[0]
         paper_node = graph.nodes.match("Paper", id=int(index)).first()
-        import code
-        code.interact(local={**locals(), **globals()})
         for i in range(1, len(vals)):
             if vals[i] == 1:
                 topic_node = graph.nodes.match("Topic", no=int(i-1)).first()
