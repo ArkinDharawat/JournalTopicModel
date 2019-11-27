@@ -104,7 +104,7 @@ class SQLStrQuery(object):
         return "SELECT * FROM temp_topic_table T JOIN Academic_Paper P ON T.Paper_Id = P.Paper_Id ORDER BY CosineDistance DESC LIMIT " + str(
             top_k) + ";"
 
-    def execute_query(self, query_str, args):
+    def execute_query(self, query_str, args=[]):
         try:
             self.cursor.execute(query_str, tuple(args))
         except Exception as e:
