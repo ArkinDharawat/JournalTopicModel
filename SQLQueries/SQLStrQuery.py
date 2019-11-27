@@ -1,6 +1,11 @@
+import mysql.connector
+
 class SQLStrQuery(object):
-    def __init__(self, k):
+    def __init__(self, k, config):
         self.num_topics = k
+        self.config = config
+        self.cnx = mysql.connector.connect(**config)
+        self.cursor = self.cnx.cursor()
 
     def create_procedure(self):
         part1 = "CREATE PROCEDURE GetTopicCosDist(" + ','.join(
@@ -98,6 +103,15 @@ class SQLStrQuery(object):
         return "SELECT * FROM temp_topic_table T JOIN Academic_Paper P ON T.Paper_Id = P.Paper_Id ORDER BY CosineDistance DESC LIMIT " + str(
             top_k) + ";"
 
+    def execute_query(self, query_str, args):
+        try:
+            self.cursor.execute(query_str, tuple(args))
+        except Exception as e:
+            print("Error :" + str(e))
+            return False
+
+        self.cnx.commit()
+        return  True
 
 if __name__ == '__main__':
     obj = SQLStrQuery(10)

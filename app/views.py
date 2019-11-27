@@ -1,6 +1,5 @@
 import os
 
-import mysql.connector
 import yaml
 from SQLQueries.SQLStrQuery import SQLStrQuery
 from TopicModel.TextProcessor import remove_non_ascii
@@ -22,13 +21,11 @@ def before_first_request_func():
 
 @app.before_request
 def before_request_func():
-    g.SQLStrObj = SQLStrQuery(10)
-    g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
     with open(os.path.join(os.getcwd(), "config.yaml"), 'r') as stream:
         config = yaml.safe_load(stream)
-    g.cnx = mysql.connector.connect(**config)
-    g.cursor = g.cnx.cursor()
-    g.default = ''
+
+    g.SQLStrObj = SQLStrQuery(10, config)
+    g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
 
 
 # static url
@@ -60,8 +57,6 @@ def insert_endpoint():
 def insert_data(request):
     SQLStrObj = g.SQLStrObj
     TopicModelobj = g.TopicModelobj
-    cursor = g.cursor
-    cnx = g.cnx
 
     paper_id = str(request.form['paper_id'])
     authors = str(request.form['authors'])
@@ -77,30 +72,31 @@ def insert_data(request):
     topics = TopicModelobj.get_topics(title=title, abstract=abstract)
 
     insert_topic_query = SQLStrObj.insert_topic(paper_id, topics)
-    try:
-        cursor.execute(insert_paper_query, (paper_id, authors, journal_id, title, abstract))
-        cursor.execute(insert_topic_query)
-    except Exception as e:
-        return "Error :" + str(e)
-    cnx.commit()
+    query1 = SQLStrObj.execute_query(insert_paper_query, [paper_id, authors, journal_id, title, abstract])
+    if not query1:
+        return "INSERTION ERROR"
+
+    query2 = SQLStrObj.execute_query(insert_topic_query)
+    if not query2:
+        return "INSERTION ERROR"
 
     return "INSERTION SUCCESSFULL"
 
 
 def delete_data(request):
     SQLStrObj = g.SQLStrObj
-    cursor = g.cursor
-    cnx = g.cnx
 
     paper_id = str(request.form['paper_id'])
     delete_paper_query = SQLStrObj.delete_paper()
     delete_topic = SQLStrObj.delete_topic()
-    try:
-        cursor.execute(delete_topic, (paper_id,))
-        cursor.execute(delete_paper_query, (paper_id,))
-    except Exception as e:
-        return "Error :" + str(e)
-    cnx.commit()
+
+    query1 = SQLStrObj.execute_query(delete_topic, [paper_id])
+    if not query1:
+        return "DELETE ERROR"
+
+    query2 = SQLStrObj.execute_query(delete_paper_query, [paper_id])
+    if not query2:
+        return "DELETE ERROR"
 
     return "DELETION SUCCESSFULL"
 
