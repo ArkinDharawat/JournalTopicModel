@@ -46,7 +46,7 @@ def add_topic_nodes(k=10):
     for id, row in topic_df.iterrows():
         vals = row.values
         index = vals[0]
-        paper_node = graph.nodes.match("Journal", id=int(index)).first()
+        paper_node = graph.nodes.match("Paper", id=int(index)).first()
         for i in range(1, len(vals)):
             if vals[i] == 1:
                 topic_node = graph.nodes.match("Topic", id=int(i-1)).first()
