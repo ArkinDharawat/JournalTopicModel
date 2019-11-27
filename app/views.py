@@ -236,6 +236,5 @@ def recommend_data(request):
 
 @app.after_request
 def after_request_func(response):
-    g.cursor.close()
-    g.cnx.close()
+    g.SQLStrObj.close_db()
     return response

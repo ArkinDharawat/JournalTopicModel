@@ -1,5 +1,6 @@
 import mysql.connector
 
+
 class SQLStrQuery(object):
     def __init__(self, k, config):
         self.num_topics = k
@@ -63,7 +64,7 @@ class SQLStrQuery(object):
         return "INSERT INTO Academic_Paper (Paper_Id, Authors, Journal_Id, Title, Abstract) VALUES (%s, %s, %s, %s, %s);"
 
     def update_paper(self, col_names):
-        self.num_topics # Not really required
+        self.num_topics  # Not really required
         alter_str = ','.join([x + "=%s" for x in col_names])
         return "UPDATE Academic_Paper SET " + alter_str + " WHERE Paper_Id = %s;"
 
@@ -111,7 +112,12 @@ class SQLStrQuery(object):
             return False
 
         self.cnx.commit()
-        return  True
+        return True
+
+    def close_db(self):
+        self.cursor.close()
+        self.cnx.close()
+
 
 if __name__ == '__main__':
     obj = SQLStrQuery(10)
