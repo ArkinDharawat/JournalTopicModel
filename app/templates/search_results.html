@@ -22,8 +22,9 @@
 </head>
 <body>
     <table class="centered thick-border">
-        {% for k in results %}
+        {% for ind, k in enumerate(results) %}
                 <tr>
+                        <td>{{ ind }}</td>
                         <td>{{ k[0] }}</td>
                         <td>{{ k[1] }}</td>
                         <td>{{ k[2] }}</td>
