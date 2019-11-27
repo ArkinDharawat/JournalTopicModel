@@ -105,6 +105,9 @@ class SQLStrQuery(object):
             top_k) + ";"
 
     def execute_query(self, query_str, args=[]):
+        import code
+        code.interact(local={**locals(), **globals()})
+
         try:
             self.cursor.execute(query_str, tuple(args))
         except Exception as e:
