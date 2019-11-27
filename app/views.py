@@ -21,7 +21,7 @@ def before_first_request_func():
 
 @app.before_request
 def before_request_func():
-    with open(os.path.join(os.getcwd(), "config.yaml"), 'r') as stream:
+    with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
         config = yaml.safe_load(stream)
 
     g.SQLStrObj = SQLStrQuery(10, config)
