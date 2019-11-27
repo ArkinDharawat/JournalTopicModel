@@ -24,8 +24,8 @@
     <table class="centered thick-border">
         {% for k in results %}
                 <tr>
-                     {% for v in k %}
-                        <td>{{ v }}</td>
+                        <td>{{ k[0] }}</td>
+                        <td>{{ k[1] }}</td>
                 </tr>
         {% endfor %}
 </table>

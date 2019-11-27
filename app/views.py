@@ -27,7 +27,7 @@ def before_request_func():
     g.DatabaseObj = SQLStrQuery(10, config)
     g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
     g.default = ''
-
+[]
 
 # static url
 @app.route('/')
@@ -215,9 +215,9 @@ def recommend_data(request):
         query_bool, result = SQLStrObj.execute_query(get_top_recommendations, [], False)
         if not query_bool:
             return result
-        results = [','.join(result.column_names)]
+        results = [result.column_names]
         for row in result:
-            results.append(','.join([str(x) for x in row]))
+            results.append([str(x) for x in row])
         return render_template("search_results.html", results=results)
 
     else:
