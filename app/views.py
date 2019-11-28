@@ -16,7 +16,7 @@ RECOMMEND = "Recommend"
 
 @app.before_first_request
 def before_first_request_func():
-    print(app.config.get('database'))
+    print(app.config.get('db_type'))
 
 
 @app.before_request

@@ -1,12 +1,11 @@
 from flask import Flask
-# from argparse import ArgumentParser
+import sys
 
-# parser = ArgumentParser()
-# parser.add_argument('-db_type', default="sql")
-# args = parser.parse_args()
 
 app = Flask(__name__)
-from app import views
-
-if __name__ == '__main__':
-  app.run(host='0.0.0.0')
+if len(sys.argv) < 3:
+    app.config['db_type'] = "sql"
+elif sys.argv[3] not in ["sql", "neo"]:
+    app.config['db_type'] = "sql"
+else:
+    app.config['db_type'] = sys.argv[3]
