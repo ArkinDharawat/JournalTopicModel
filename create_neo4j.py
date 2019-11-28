@@ -57,5 +57,5 @@ def add_topic_nodes(k=10):
 
 # add_journal_nodes()
 # add_paper_nodes()
-add_topic_nodes()
+# add_topic_nodes()
 # Exmaplee query: d = graph.run("MATCH (p:Paper)-[:PUBLISHED]->(j:Journal {id:1}) RETURN p.title").data()
