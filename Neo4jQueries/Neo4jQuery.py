@@ -26,7 +26,7 @@ class Neo4jQuery(object):
         value_str = self.construct_topic_vector(topic_indices)
         query_str = []
         for i in range(len(value_str)):
-            if value_str == "1":
+            if value_str[i] == "1":
                 query_str.append(paper_topic_rel_str.format(paper_id, i))
 
         return ';'.join(query_str)  # TODO: Check if we can use this to execute multple queries
