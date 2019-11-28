@@ -30,9 +30,10 @@
         <thead>
             <tr>
                 <th>Paper_Id</th>
+                <th>CosineDistance</th>
                 <th>Authors</th>
+                <th>Journal_Id</th>
                 <th>Title</th>
-                <th>Abstract</th>
             </tr>
         </thead>
         <tbody>
@@ -40,8 +41,9 @@
                 <tr>
                         <td>{{ k[0] }}</td>
                         <td>{{ k[1] }}</td>
-                        <td>{{ k[2] }}</td>
                         <td>{{ k[3] }}</td>
+                        <td>{{ k[4] }}</td>
+                        <td>{{ k[5] }}</td>
                 </tr>
             {% endfor %}
         </tbody>

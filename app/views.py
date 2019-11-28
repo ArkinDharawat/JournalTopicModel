@@ -185,7 +185,7 @@ def search_data(request):
         results = []
         for row in result:
             results.append([str(x) for x in row])
-        return render_template("search_results.html", results=results)
+        return render_template("reco_results.html", results=results)
 
     return "Nothing Searched For"
 
