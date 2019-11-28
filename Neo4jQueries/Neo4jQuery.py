@@ -59,7 +59,7 @@ class Neo4jQuery(object):
             assign_dict = dict(zip(keys, args))
 
         try:
-            cursor = tx.run(query_str, assign_dict).evaluate()
+            cursor = tx.run(query_str, assign_dict)
             tx.commit()
         except Exception as e:
             print("Error :" + str(e))
