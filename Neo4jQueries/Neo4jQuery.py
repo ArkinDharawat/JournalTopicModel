@@ -58,6 +58,9 @@ class Neo4jQuery(object):
 
         return True, output
 
+    def close_db(self):
+        return  # py2neo use a REST API
+
 
 if __name__ == '__main__':
     import os
