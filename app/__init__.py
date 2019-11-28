@@ -3,6 +3,7 @@ import sys
 
 
 app = Flask(__name__)
+from app import views
 if len(sys.argv) < 3:
     app.config['db_type'] = "sql"
 elif sys.argv[3] not in ["sql", "neo"]:
