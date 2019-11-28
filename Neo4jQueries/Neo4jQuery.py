@@ -49,9 +49,13 @@ class Neo4jQuery(object):
             assign_dict = {}
         else:
             assign_dict = dict(zip(keys, args))
+        try:
+            output = self.graph.run(query_str, assign_dict).evaluate()
+        except Exception as e:
+            print("Error :" + str(e))
+            return False, e
 
-        output = self.graph.run(query_str, assign_dict).evaluate()
-        return output
+        return True, output
 
 
 if __name__ == '__main__':
