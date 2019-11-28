@@ -22,14 +22,14 @@ class Neo4jQuery(object):
             "id", "authors", "journal_id", "title", "abstract"]
 
     def insert_topic(self, paper_id, topic_indices):
-        paper_topic_rel_str = "MATCH (p:Paper), (t:Topic) WHERE p.id={0} AND t.no={1} CREATE (p)-[:TopicOf]->(t)"
+        paper_topic_rel_str = "MATCH (p:Paper), (t:Topic) WHERE p.id={0} AND t.no IN [{1}] CREATE (p)-[:TopicOf]->(t)"
         value_str = self.construct_topic_vector(topic_indices)
-        query_str = []
+        topic_nodes = []
         for i in range(len(value_str)):
             if value_str[i] == "1":
-                query_str.append(paper_topic_rel_str.format(paper_id, i))
-
-        return ';'.join(query_str)  # TODO: Check if we can use this to execute multple queries
+                topic_nodes.append(str(i))
+        query_str = paper_topic_rel_str.format(paper_id, ','.join(topic_nodes))
+        return query_str, []
 
     def delete_paper(self):
         return "MATCH (p:Paper) WHERE p.id={id} DETACH DELETE p", ["id"]  # Deletes nodes and all edges
