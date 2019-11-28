@@ -24,22 +24,22 @@ def before_first_request_func():
     print(app.config.get('DB_TYPE'), app.config.get('AUTH_FILE'))
 
 
-
 @app.before_request
 def before_request_func():
-    db_type = app.config.get('DB_TYPE')
+    g.db_type = app.config.get('DB_TYPE')
     auth_file_path = app.config.get('AUTH_FILE')
 
     with open(os.path.join(os.getcwd(), auth_file_path), 'r') as stream:
         config = yaml.safe_load(stream)
 
-    if db_type == "sql":
+    if g.db_type == "sql":
         g.DatabaseObj = SQLStrQuery(10, config)
     else:
         g.DatabaseObj = Neo4jQuery(10, config)
 
     g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
     g.default = ''
+
 
 # static url
 @app.route('/')
@@ -83,9 +83,6 @@ def insert_data(request):
     insert_paper_query = SQLStrObj.insert_paper()
 
     topics = TopicModelobj.get_topics(title=title, abstract=abstract)
-
-    import code
-    code.interact(local={**locals(), **globals()})
 
     insert_topic_query = SQLStrObj.insert_topic(paper_id, topics)
     query_bool, result = SQLStrObj.execute_query(insert_paper_query, [paper_id, authors, journal_id, title, abstract])
@@ -174,7 +171,11 @@ def search_data(request):
     if paper_id == default and authors == default and journal_id == default:
         return "Cannot Search For Result"
     elif authors != default:
-        query_bool, result = SQLStrObj.execute_query(query_str='SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";', commit=False)
+        if g.db_type == "neo":
+            return render_template("search_results.html", results=[])  # TODO: Fix this query later on
+
+        query_bool, result = SQLStrObj.execute_query(
+            query_str='SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";', commit=False)
         if not query_bool:
             return result
         results = []
@@ -184,10 +185,15 @@ def search_data(request):
 
     elif journal_id != default:
         search_journal = SQLStrObj.search_journal()
+
+        import code
+        code.interact(local={**locals(), **globals()})
+
         query_bool, result = SQLStrObj.execute_query(search_journal, [journal_id], False)
         if not query_bool:
             return result
         results = []
+
         for row in result:
             results.append([str(x) for x in row])
         return render_template("search_results.html", results=results)
