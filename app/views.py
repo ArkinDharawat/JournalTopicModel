@@ -68,7 +68,7 @@ def insert_endpoint():
 
 
 def insert_data(request):
-    SQLStrObj = g.DatabaseObj
+    DatabaseObj = g.DatabaseObj
     TopicModelobj = g.TopicModelobj
 
     paper_id = str(request.form['paper_id'])
@@ -80,16 +80,16 @@ def insert_data(request):
     title = remove_non_ascii(title)
     abstract = remove_non_ascii(abstract)
 
-    insert_paper_query = SQLStrObj.insert_paper()
+    insert_paper_query = DatabaseObj.insert_paper()
 
     topics = TopicModelobj.get_topics(title=title, abstract=abstract)
 
-    insert_topic_query = SQLStrObj.insert_topic(paper_id, topics)
-    query_bool, result = SQLStrObj.execute_query(insert_paper_query, [paper_id, authors, journal_id, title, abstract])
+    insert_topic_query = DatabaseObj.insert_topic(paper_id, topics)
+    query_bool, result = DatabaseObj.execute_query(insert_paper_query, [paper_id, authors, journal_id, title, abstract])
     if not query_bool:
         return "INSERTION ERROR"
 
-    query_bool, result = SQLStrObj.execute_query(insert_topic_query)
+    query_bool, result = DatabaseObj.execute_query(insert_topic_query)
     if not query_bool:
         return "INSERTION ERROR"
 
@@ -97,17 +97,17 @@ def insert_data(request):
 
 
 def delete_data(request):
-    SQLStrObj = g.DatabaseObj
+    DatabaseObj = g.DatabaseObj
 
     paper_id = str(request.form['paper_id'])
-    delete_paper_query = SQLStrObj.delete_paper()
-    delete_topic = SQLStrObj.delete_topic()
+    delete_paper_query = DatabaseObj.delete_paper()
+    delete_topic = DatabaseObj.delete_topic()
 
-    query_bool, result = SQLStrObj.execute_query(delete_topic, [paper_id])
+    query_bool, result = DatabaseObj.execute_query(delete_topic, [paper_id])
     if not query_bool:
         return "DELETE ERROR"
 
-    query_bool, result = SQLStrObj.execute_query(delete_paper_query, [paper_id])
+    query_bool, result = DatabaseObj.execute_query(delete_paper_query, [paper_id])
     if not query_bool:
         return "DELETE ERROR"
 
@@ -138,7 +138,7 @@ def filter_update_data(request):
 
 
 def update_data(request):
-    SQLStrObj = g.DatabaseObj
+    DatabaseObj = g.DatabaseObj
 
     paper_id = str(request.form['paper_id'])
 
@@ -152,8 +152,8 @@ def update_data(request):
 
     # TODO: Add Update for Topics if title/abstract updated
     if column != [] and data != []:
-        update_query = SQLStrObj.update_paper(column)
-        query_res, err = SQLStrObj.execute_query(update_query, data)
+        update_query = DatabaseObj.update_paper(column)
+        query_res, err = DatabaseObj.execute_query(update_query, data)
         if not query_res:
             return "UPDATE ERROR"
 
@@ -161,7 +161,7 @@ def update_data(request):
 
 
 def search_data(request):
-    SQLStrObj = g.DatabaseObj
+    DatabaseObj = g.DatabaseObj
     default = g.default
     paper_id = str(request.form['paper_id'])
     authors = str(request.form['authors'])
@@ -175,7 +175,7 @@ def search_data(request):
         else:
             query_str = 'SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";'
 
-        query_bool, result = SQLStrObj.execute_query(query_str, commit=False)
+        query_bool, result = DatabaseObj.execute_query(query_str, commit=False)
 
         if not query_bool:
             return result
@@ -184,8 +184,8 @@ def search_data(request):
         if g.db_type == "neo":
             journal_id = int(journal_id)  # Neo4j can't take strs
 
-        search_journal = SQLStrObj.search_journal()
-        query_bool, result = SQLStrObj.execute_query(search_journal, [journal_id], False)
+        search_journal = DatabaseObj.search_journal()
+        query_bool, result = DatabaseObj.execute_query(search_journal, [journal_id], False)
         if not query_bool:
             return result
 
@@ -193,12 +193,13 @@ def search_data(request):
         if g.db_type == "neo":
             paper_id = int(paper_id)  # Neo4j can't take strs
 
-        search_paper = SQLStrObj.search_paper()
-        query_bool, result = SQLStrObj.execute_query(search_paper, [paper_id], False)
+        search_paper = DatabaseObj.search_paper()
+        query_bool, result = DatabaseObj.execute_query(search_paper, [paper_id], False)
         if not query_bool:
             return result
     else:
         return "Nothing Searched For"
+    
     results = []
     if g.db_type == "neo":
         data = result.data()
@@ -209,8 +210,6 @@ def search_data(request):
         for row in result:
             results.append([str(x) for x in row])
     return render_template("search_results.html", results=results)
-
-
 
 
 def recommend_data(request):
