@@ -177,10 +177,6 @@ def search_data(request):
             query_str='SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";', commit=False)
         if not query_bool:
             return result
-        results = []
-        for row in result:
-            results.append([str(x) for x in row])
-        return render_template("search_results.html", results=results)
 
     elif journal_id != default:
         if g.db_type == "neo":
@@ -190,14 +186,6 @@ def search_data(request):
         query_bool, result = SQLStrObj.execute_query(search_journal, [journal_id], False)
         if not query_bool:
             return result
-        results = []
-        import code
-
-        code.interact(local={**locals(), **globals()})
-
-        for row in result:
-            results.append([str(x) for x in row])
-        return render_template("search_results.html", results=results)
 
     elif paper_id != default:
         if g.db_type == "neo":
@@ -207,12 +195,18 @@ def search_data(request):
         query_bool, result = SQLStrObj.execute_query(search_paper, [paper_id], False)
         if not query_bool:
             return result
-        results = []
-        for row in result:
-            results.append([str(x) for x in row])
-        return render_template("reco_results.html", results=results)
+    else:
+        return "Nothing Searched For"
 
-    return "Nothing Searched For"
+    import code
+    code.interact(local={**locals(), **globals()})
+
+    results = []
+    for row in result:
+        results.append([str(x) for x in row])
+    return render_template("search_results.html", results=results)
+
+
 
 
 def recommend_data(request):
