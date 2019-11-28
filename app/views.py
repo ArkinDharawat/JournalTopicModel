@@ -197,15 +197,13 @@ def search_data(request):
             return result
     else:
         return "Nothing Searched For"
-
-
+    results = []
     if g.db_type == "neo":
-        results = []
         data = result.data()
-        import code
-        code.interact(local={**locals(), **globals()})
+        for r in data:
+            row = r.values()
+            results.append([str(x) for x in row])
     else:
-        results = []
         for row in result:
             results.append([str(x) for x in row])
     return render_template("search_results.html", results=results)
