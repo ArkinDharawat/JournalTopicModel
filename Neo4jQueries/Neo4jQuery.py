@@ -38,13 +38,13 @@ class Neo4jQuery(object):
         return "", []  # Empty bc delete_paper handles it
 
     def search_journal(self):
-        return "MATCH (p:Paper) WHERE p.journal_id={id} RETURN p", ["id"]
+        return "MATCH (p:Paper) WHERE p.journal_id={id} RETURN p.id, p.authors, p.journal_id, p.title", ["id"]
 
     def search_paper(self):
-        return "MATCH (p:Paper) WHERE p.id={id} RETURN p", ["id"]
+        return "MATCH (p:Paper) WHERE p.id={id} RETURN p.id, p.authors, p.journal_id, p.title", ["id"]
 
     def search_authors(self):
-        return "MATCH (p:Paper) WHERE p.authors=~ '.*{authors}.*' RETURN p", ["authors"]
+        return "MATCH (p:Paper) WHERE p.authors=~ '.*{authors}.*' RETURN p.id, p.authors, p.journal_id, p.title", ["authors"]
 
     def execute_query(self, query_str, args=[], commit=True):
         tx = self.graph.begin()
