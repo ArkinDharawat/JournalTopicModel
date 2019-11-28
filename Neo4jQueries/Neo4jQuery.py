@@ -31,9 +31,6 @@ class Neo4jQuery(object):
 
         return ';'.join(query_str)  # TODO: Check if we can use this to execute multple queries
 
-    def delete_journal(self):
-        return "MATCH (j:Journal) WHERE j.id={id} DETACH DELETE j", ["id"]
-
     def delete_paper(self):
         return "MATCH (p:Paper) WHERE p.id={id} DETACH DELETE p", ["id"]
 
@@ -45,7 +42,6 @@ class Neo4jQuery(object):
 
     def search_authors(self):
         return "MATCH (p:Paper) WHERE p.authors=~ '.*{authors}.*' RETURN p", ["authors"]
-
 
     def execute_query(self, query_str, args=[], commit=True):
         query_str, keys = query_str
@@ -68,5 +64,4 @@ if __name__ == '__main__':
     obj = Neo4jQuery(10, config)
 
     import code
-
     code.interact(local={**locals(), **globals()})
