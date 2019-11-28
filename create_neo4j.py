@@ -35,6 +35,13 @@ def add_paper_nodes():
         journal_node = graph.nodes.match("Journal", id=int(journal_id)).first()
         graph.create(Relationship(paper_node, "PUBLISHED", journal_node))
 
+def update_paper_nodes():
+    articles_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/AllArticles_Subset.csv"))
+    for id, row in articles_df.iterrows():
+        title, author, url, abstract, journal_id = row.values
+        dict = {"id": int(id), "journal_id":int(journal_id)}
+        output = graph.run("MATCH (p:Paper) WHERE p.id={id} SET p.journal_id={journal_id}", dict).evaluate()
+
 
 def add_topic_nodes(k=10):
     # Add topic nodes
@@ -58,4 +65,5 @@ def add_topic_nodes(k=10):
 # add_journal_nodes()
 # add_paper_nodes()
 # add_topic_nodes()
+update_paper_nodes()
 # Exmaplee query: d = graph.run("MATCH (p:Paper)-[:PUBLISHED]->(j:Journal {id:1}) RETURN p.title").data()
