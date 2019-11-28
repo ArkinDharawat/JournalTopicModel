@@ -44,6 +44,7 @@ class Neo4jQuery(object):
         return "MATCH (p:Paper) WHERE p.authors=~ '.*{authors}.*' RETURN p", ["authors"]
 
     def execute_query(self, query_str, args=[], commit=True):
+        tx = self.graph.begin()
         query_str, keys = query_str
         if len(keys) == 0:
             assign_dict = {}
@@ -51,12 +52,13 @@ class Neo4jQuery(object):
             assign_dict = dict(zip(keys, args))
 
         try:
-            output = self.graph.run(query_str, assign_dict).evaluate()
+            cursor = tx.run(query_str, assign_dict).evaluate()
+            tx.commit()
         except Exception as e:
             print("Error :" + str(e))
             return False, e
 
-        return True, output
+        return True, cursor
 
     def close_db(self):
         return  # py2neo use a REST API
