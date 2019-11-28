@@ -171,10 +171,12 @@ def search_data(request):
         return "Cannot Search For Result"
     elif authors != default:
         if g.db_type == "neo":
-            return render_template("search_results.html", results=[])  # TODO: Fix this query later on
+            query_str = "MATCH (p:Paper) WHERE p.authors=~ '.*" + authors + ".*' RETURN p.id, p.authors, p.journal_id, p.title", []
+        else:
+            query_str = 'SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";'
 
-        query_bool, result = SQLStrObj.execute_query(
-            query_str='SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";', commit=False)
+        query_bool, result = SQLStrObj.execute_query(query_str, commit=False)
+
         if not query_bool:
             return result
 
