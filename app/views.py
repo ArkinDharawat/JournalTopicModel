@@ -84,6 +84,9 @@ def insert_data(request):
 
     topics = TopicModelobj.get_topics(title=title, abstract=abstract)
 
+    import code
+    code.interact(local={**locals(), **globals()})
+
     insert_topic_query = SQLStrObj.insert_topic(paper_id, topics)
     query_bool, result = SQLStrObj.execute_query(insert_paper_query, [paper_id, authors, journal_id, title, abstract])
     if not query_bool:
