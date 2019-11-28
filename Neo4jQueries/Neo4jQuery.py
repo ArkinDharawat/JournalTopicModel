@@ -34,6 +34,9 @@ class Neo4jQuery(object):
     def delete_paper(self):
         return "MATCH (p:Paper) WHERE p.id={id} DETACH DELETE p", ["id"]  # Deletes nodes and all edges
 
+    def delete_topic(self):
+        return "", []  # Empty bc delete_paper handles it
+
     def search_journal(self):
         return "MATCH (p:Paper) WHERE p.journal_id={id} RETURN p", ["id"]
 
@@ -46,6 +49,10 @@ class Neo4jQuery(object):
     def execute_query(self, query_str, args=[], commit=True):
         tx = self.graph.begin()
         query_str, keys = query_str
+
+        if len(query_str) == 0:
+            return True, None # No Query to execute
+
         if len(keys) == 0:
             assign_dict = {}
         else:
