@@ -46,6 +46,30 @@ class Neo4jQuery(object):
     def search_authors(self):
         return "MATCH (p:Paper) WHERE p.authors=~ '.*{authors}.*' RETURN p.id, p.authors, p.journal_id, p.title", ["authors"]
 
+    def get_recommended_papers(self):
+        query = """ 
+                        // get target user and their neighbors pairs and count // of distinct movies that they have rented in common 
+                        MATCH (p1:Paper)-[:RENTED]->(t:Topic)<-[:RENTED]-(p2:Paper) 
+                        WHERE p1 <> p2 AND p1.customerID = {cid} 
+                        WITH p1, p2, COUNT(DISTINCT t) as intersection 
+
+                        // get count of all the distinct movies that they have rented in total (Union) 
+                        MATCH (p:Paper)-[:RENTED]->(t:Topic) 
+                        WHERE p in [p1, p2] WITH p1, p2, intersection, COUNT(DISTINCT t) as union 
+
+                        // compute Jaccard index 
+                        WITH p1, p2, intersection, union, (intersection * 1.0 / union) as jaccard_index 
+
+                        // get top k nearest neighbors based on Jaccard index 
+                        ORDER BY jaccard_index DESC, p2.id 
+                        WITH p1, COLLECT([p2.id, jaccard_index, intersection, union])[0..{k}] as neighbors WHERE SIZE(neighbors) = {k}   
+
+                        // return users with enough neighbors 
+                        RETURN p1.id as id, neighbors 
+                    """
+        pass # TODO: Need to Figure this out
+
+
     def execute_query(self, query_str, args=[], commit=True):
         tx = self.graph.begin()
         query_str, keys = query_str
