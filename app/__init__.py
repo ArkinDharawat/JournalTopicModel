@@ -5,4 +5,4 @@ app = Flask(__name__)
 @click.argument("db_type")
 def set_db(db_type):
     print(db_type)
-from app import views
+    from app import views
