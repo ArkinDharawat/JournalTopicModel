@@ -7,14 +7,55 @@ class Neo4jQuery(object):
         self.config = config
         self.graph = Graph(auth=(config["user"], config["password"]))
 
+    def construct_topic_vector(self, topic_indices):
+        value_str = ["0"] * self.num_topics
+        for k in topic_indices:
+            value_str[k - 1] = "1"
+        return value_str
+
     def insert_journal(self):
         return "CREATE (j:Journal {id:{id}, name:{name}, field:{field}, ranking:{ranking})", ["id", "name", "field",
                                                                                               "ranking"]
 
+    def insert_paper(self):
+        return "CREATE (p:Paper {id:{id}, authors:{authors}, journal_Id:{journal_id}, title:{title}, abstract:{abstract}})", [
+            "id", "authors", "journal_id", "title", "abstract"]
+
+    def insert_topic(self, paper_id, topic_indices):
+        paper_topic_rel_str = "MATCH (p:Paper), (t:Topic) WHERE p.id={0} AND t.no={1} CREATE (p)-[:TopicOf]->(t)"
+        value_str = self.construct_topic_vector(topic_indices)
+        query_str = []
+        for i in range(len(value_str)):
+            if value_str == "1":
+                query_str.append(paper_topic_rel_str.format(paper_id, i))
+
+        return ';'.join(query_str)  # TODO: Check if we can use this to execute multple queries
+
+    def delete_journal(self):
+        return "MATCH (j:Journal) WHERE j.id={id} DETACH DELETE j", ["id"]
+
+    def delete_paper(self):
+        return "MATCH (p:Paper) WHERE p.id={id} DETACH DELETE p", ["id"]
+
+    def search_journal(self):
+        return "MATCH (p:Paper) WHERE p.journal_id={id} RETURN p", ["id"]
+
+    def search_paper(self):
+        return "MATCH (p:Paper) WHERE p.id={id} RETURN p", ["id"]
+
+    def search_authors(self):
+        return "MATCH (p:Paper) WHERE p.authors=~ '.*{authors}.*' RETURN p", ["authors"]
+
+
     def execute_query(self, query_str, args=[], commit=True):
         query_str, keys = query_str
-        import code
-        code.interact(local={**locals(), **globals()})
+        if len(keys) == 0:
+            assign_dict = {}
+        else:
+            assign_dict = dict(zip(keys, args))
+
+        output = self.graph.run(query_str, assign_dict).evaluate()
+        return output
 
 
 if __name__ == '__main__':
@@ -25,4 +66,7 @@ if __name__ == '__main__':
         config = yaml.safe_load(stream)
 
     obj = Neo4jQuery(10, config)
-    obj.execute_query(obj.insert_journal(), ["1", "Hi Hello", "Economics", "10000"])
+
+    import code
+
+    code.interact(local={**locals(), **globals()})
