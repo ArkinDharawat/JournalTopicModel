@@ -2,6 +2,7 @@ import os
 
 import yaml
 from SQLQueries.SQLStrQuery import SQLStrQuery
+from Neo4jQueries.Neo4jQuery import Neo4jQuery
 from TopicModel.TextProcessor import remove_non_ascii
 from TopicModel.TopicExtractor import TopicModel
 from app import app
@@ -19,17 +20,24 @@ def before_first_request_func():
     db_type = app.config.get('DB_TYPE')
     if db_type not in ["sql", "neo"]:
         app.config["DB_TYPE"] = "sql"
-    print(app.config.get('DB_TYPE'))
+        app.config["AUTH_FILE"] = "config.yml"
+    print(app.config.get('DB_TYPE'), app.config.get('AUTH_FILE'))
 
 
 
 @app.before_request
 def before_request_func():
-    with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
+    db_type = app.config.get('DB_TYPE')
+    auth_file_path = app.config.get('AUTH_FILE')
+
+    with open(os.path.join(os.getcwd(), auth_file_path), 'r') as stream:
         config = yaml.safe_load(stream)
 
-    g.db_type = app.config.get('DB_TYPE')
-    g.DatabaseObj = SQLStrQuery(10, config)
+    if db_type == "sql":
+        g.DatabaseObj = SQLStrQuery(10, config)
+    else:
+        g.DatabaseObj = Neo4jQuery(10, config)
+
     g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
     g.default = ''
 
