@@ -8,9 +8,11 @@ class Neo4jQuery(object):
         self.graph = Graph(auth=(config["user"], config["password"]))
 
     def insert_journal(self):
-        return "CREATE (j:Journal {id:%s, name:%s, field:%s, ranking:%s})"
+        return "CREATE (j:Journal {id:{id}, name:{name}, field:{field}, ranking:{ranking})", ["id", "name", "field",
+                                                                                              "ranking"]
 
     def execute_query(self, query_str, args=[], commit=True):
+        query_str, keys = query_str
         import code
         code.interact(local={**locals(), **globals()})
 
