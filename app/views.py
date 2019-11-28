@@ -191,6 +191,9 @@ def search_data(request):
         if not query_bool:
             return result
         results = []
+        import code
+
+        code.interact(local={**locals(), **globals()})
 
         for row in result:
             results.append([str(x) for x in row])
