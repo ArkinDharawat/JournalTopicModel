@@ -167,10 +167,6 @@ def search_data(request):
     authors = str(request.form['authors'])
     journal_id = str(request.form['journal_id'])
 
-    if g.db_type == "neo":
-        paper_id = int(paper_id)
-        journal_id = int(journal_id) # Neo4j can't take strs
-
     if paper_id == default and authors == default and journal_id == default:
         return "Cannot Search For Result"
     elif authors != default:
@@ -187,6 +183,9 @@ def search_data(request):
         return render_template("search_results.html", results=results)
 
     elif journal_id != default:
+        if g.db_type == "neo":
+            journal_id = int(journal_id)  # Neo4j can't take strs
+
         search_journal = SQLStrObj.search_journal()
         query_bool, result = SQLStrObj.execute_query(search_journal, [journal_id], False)
         if not query_bool:
@@ -198,6 +197,9 @@ def search_data(request):
         return render_template("search_results.html", results=results)
 
     elif paper_id != default:
+        if g.db_type == "neo":
+            paper_id = int(paper_id)  # Neo4j can't take strs
+
         search_paper = SQLStrObj.search_paper()
         query_bool, result = SQLStrObj.execute_query(search_paper, [paper_id], False)
         if not query_bool:
