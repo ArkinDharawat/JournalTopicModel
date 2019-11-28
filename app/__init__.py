@@ -6,7 +6,7 @@ from flask import Flask
 # args = parser.parse_args()
 
 app = Flask(__name__)
-import app.views
+from app import views
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0')
