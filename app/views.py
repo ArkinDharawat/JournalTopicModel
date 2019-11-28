@@ -163,10 +163,13 @@ def update_data(request):
 def search_data(request):
     SQLStrObj = g.DatabaseObj
     default = g.default
-
     paper_id = str(request.form['paper_id'])
     authors = str(request.form['authors'])
     journal_id = str(request.form['journal_id'])
+
+    if g.db_type == "neo":
+        paper_id = int(paper_id)
+        journal_id = int(journal_id) # Neo4j can't take strs
 
     if paper_id == default and authors == default and journal_id == default:
         return "Cannot Search For Result"
@@ -185,10 +188,6 @@ def search_data(request):
 
     elif journal_id != default:
         search_journal = SQLStrObj.search_journal()
-
-        import code
-        code.interact(local={**locals(), **globals()})
-
         query_bool, result = SQLStrObj.execute_query(search_journal, [journal_id], False)
         if not query_bool:
             return result
