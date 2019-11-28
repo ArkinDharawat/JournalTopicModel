@@ -18,7 +18,7 @@ class Neo4jQuery(object):
                                                                                               "ranking"]
 
     def insert_paper(self):
-        return "CREATE (p:Paper {id:{id}, authors:{authors}, journal_Id:{journal_id}, title:{title}, abstract:{abstract}})", [
+        return "CREATE (p:Paper {id:{id}, authors:{authors}, journal_id:{journal_id}, title:{title}, abstract:{abstract}})", [
             "id", "authors", "journal_id", "title", "abstract"]
 
     def insert_topic(self, paper_id, topic_indices):
@@ -32,7 +32,7 @@ class Neo4jQuery(object):
         return ';'.join(query_str)  # TODO: Check if we can use this to execute multple queries
 
     def delete_paper(self):
-        return "MATCH (p:Paper) WHERE p.id={id} DETACH DELETE p", ["id"]
+        return "MATCH (p:Paper) WHERE p.id={id} DETACH DELETE p", ["id"]  # Deletes nodes and all edges
 
     def search_journal(self):
         return "MATCH (p:Paper) WHERE p.journal_id={id} RETURN p", ["id"]
@@ -49,6 +49,7 @@ class Neo4jQuery(object):
             assign_dict = {}
         else:
             assign_dict = dict(zip(keys, args))
+
         try:
             output = self.graph.run(query_str, assign_dict).evaluate()
         except Exception as e:
@@ -68,4 +69,5 @@ if __name__ == '__main__':
     obj = Neo4jQuery(10, config)
 
     import code
+
     code.interact(local={**locals(), **globals()})
