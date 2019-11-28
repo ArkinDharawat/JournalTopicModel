@@ -16,7 +16,7 @@ RECOMMEND = "Recommend"
 
 @app.before_first_request
 def before_first_request_func():
-    print("Here?")
+    print(app.config.get('database'))
 
 
 @app.before_request
@@ -27,7 +27,6 @@ def before_request_func():
     g.DatabaseObj = SQLStrQuery(10, config)
     g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
     g.default = ''
-[]
 
 # static url
 @app.route('/')
