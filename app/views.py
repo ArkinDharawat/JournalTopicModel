@@ -16,7 +16,11 @@ RECOMMEND = "Recommend"
 
 @app.before_first_request
 def before_first_request_func():
+    db_type = app.config.get('DB_TYPE')
+    if db_type not in ["sql", "neo"]:
+        app.config["DB_TYPE"] = "sql"
     print(app.config.get('DB_TYPE'))
+
 
 
 @app.before_request
@@ -24,6 +28,7 @@ def before_request_func():
     with open(os.path.join(os.getcwd(), "config.yml"), 'r') as stream:
         config = yaml.safe_load(stream)
 
+    g.db_type = app.config.get('DB_TYPE')
     g.DatabaseObj = SQLStrQuery(10, config)
     g.TopicModelobj = TopicModel(os.path.join(os.path.expanduser('~'), "../project/data/"))
     g.default = ''
