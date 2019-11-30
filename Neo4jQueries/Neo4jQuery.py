@@ -49,12 +49,12 @@ class Neo4jQuery(object):
 
     def get_recommended_papers(self):
         # TODO: Remove p1.id < 3000
-        query = "MATCH (j:Journal)<-[pub1:PUBLISHED]-(p1:Paper)-[r1:TopicOf]->(Topic) WHERE p1.id < 3000 " \ 
-                "WITH p1 AS p1, j AS j, algo.similarity.cosine({topic_vec}, collect(r1.score)) AS similarity " \
-                "RETURN  p.id,  round(similarity * 100) / 100, p.id,, p.authors, p.journal_id, p.title" \
-                "ORDER BY similarity DESC, j.ranking LIMIT 10;"
+        q1 = "MATCH (j:Journal)<-[pub1:PUBLISHED]-(p1:Paper)-[r1:TopicOf]->(Topic) WHERE p1.id < 3000 "
+        q2 = "WITH p1 AS p1, j AS j, algo.similarity.cosine({topic_vec}, collect(r1.score)) AS similarity "
+        q3 = "RETURN  p.id,  round(similarity * 100) / 100, p.id,, p.authors, p.journal_id, p.title "
+        q4 = "ORDER BY similarity DESC, j.ranking LIMIT 10;"
 
-        return query, ["topic_vec"]
+        return q1+q2+q3+q4, ["topic_vec"]
 
     def execute_query(self, query_str, args=[], commit=True):
         tx = self.graph.begin()
