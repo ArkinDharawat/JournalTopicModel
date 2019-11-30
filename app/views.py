@@ -230,7 +230,11 @@ def recommend_data(request):
         topics = TopicModelobj.get_topics(title=title, abstract=abstract)
 
         if g.db_type == "neo":
-            topic_vec = DatabaseObj.construct_topic_vector(topics)
+            topic_vec = [int(x) for x in DatabaseObj.construct_topic_vector(topics)]
+
+            import code
+            code.interact(local={**locals(), **globals()})
+
             get_top_recommendations = DatabaseObj.get_recommended_papers()
             query_bool, result = DatabaseObj.execute_query(get_top_recommendations, [topic_vec])
             if not query_bool:
