@@ -46,9 +46,9 @@ def update_paper_nodes():
 
 def add_topic_nodes(k=10):
     # Add topic nodes
-    topic_nodes = [Node("Topic", no=int(x)) for x in range(k)]
-    for topic_node in topic_nodes:
-        graph.create(topic_node)
+    # topic_nodes = [Node("Topic", no=int(x)) for x in range(k)]
+    # for topic_node in topic_nodes:
+    #     graph.create(topic_node)
 
     topic_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/id_topic.csv"))
     for id, row in topic_df.iterrows():
@@ -58,7 +58,7 @@ def add_topic_nodes(k=10):
             r = 0
             if vals[i] == 1:
                 r = 1
-            query = "MATCH (a:Paper {id: {id}})-[r:TopicOf]->(t:Topic {no: {no}}) SET r.score = {s}"
+            query = "CREATE (a:Paper {id: {id}})-[(r:TopicOf {score = {s}})]->(t:Topic {no: {no}})"
             graph.run(query, {"id": int(index), "no": int(i - 1), "s": int(r)})
         print(index)
         if index > 10:
