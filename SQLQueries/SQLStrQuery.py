@@ -1,12 +1,6 @@
-import mysql.connector
-
-
 class SQLStrQuery(object):
-    def __init__(self, k, config):
+    def __init__(self, k):
         self.num_topics = k
-        self.config = config
-        self.cnx = mysql.connector.connect(**config)
-        self.cursor = self.cnx.cursor()
 
     def create_procedure(self):
         part1 = "CREATE PROCEDURE GetTopicCosDist(" + ','.join(
@@ -45,16 +39,16 @@ class SQLStrQuery(object):
 
         topic_values = ["Paper_Id INTEGER NOT NULL"]
         for i in range(self.num_topics):
-            topic_values.append("Topic{0} INTEGER".format(i))
+            topic_values.append("Topic{0} REAL".format(i))
         value_str = ",".join(topic_values)
         table_topic = "CREATE TABLE Topics_per_Paper (" + value_str + ", FOREIGN KEY(Paper_Id) REFERENCES Academic_Paper(Paper_Id));"
 
         return [table_acad_journal, table_acad_paper, table_topic]
 
     def construct_topic_vector(self, topic_indices):
-        value_str = ["0"] * self.num_topics
-        for k in topic_indices:
-            value_str[k - 1] = "1"
+        value_str = ["0.0"] * self.num_topics
+        for ind,val in topic_indices:
+            value_str[ind - 1] = str(round(val, 2))
         return value_str
 
     def insert_journal(self):
@@ -64,7 +58,7 @@ class SQLStrQuery(object):
         return "INSERT INTO Academic_Paper (Paper_Id, Authors, Journal_Id, Title, Abstract) VALUES (%s, %s, %s, %s, %s);"
 
     def update_paper(self, col_names):
-        self.num_topics  # Not really required
+        self.num_topics # Not really required
         alter_str = ','.join([x + "=%s" for x in col_names])
         return "UPDATE Academic_Paper SET " + alter_str + " WHERE Paper_Id = %s;"
 
@@ -101,34 +95,8 @@ class SQLStrQuery(object):
     def get_recommended_papers(self, top_k):
         if top_k < self.num_topics:
             top_k = self.num_topics
-        return "SELECT * FROM temp_topic_table T JOIN Academic_Paper P ON T.Paper_Id = P.Paper_Id ORDER BY CosineDistance DESC LIMIT " + str(
+        return "SELECT P.Paper_Id, P.Title, P.Abstract, J.Journal_Id FROM temp_topic_table T JOIN Academic_Paper P ON T.Paper_Id = P.Paper_Id JOIN Academic_Journal J ON P.Journal_Id=J.Journal_Id WHERE J.Rank!=0 ORDER BY CosineDistance DESC, J.Rank ASC LIMIT " + str(
             top_k) + ";"
-
-    def execute_query(self, query_str, args=[], commit=True):
-        try:
-            self.cursor.execute(query_str, tuple(args))
-        except Exception as e:
-            print("Error :" + str(e))
-            return False, e
-        if commit:
-            self.cnx.commit()  # Queries that need to be commited
-
-        return True, self.cursor
-
-    def execute_topic_proc(self, topics):
-        try:
-            self.cursor.callproc("GetTopicCosDist", args=tuple(self.construct_topic_vector(topics)))
-        except Exception as e:
-            print("Error :" + str(e))
-            return False, e
-
-        self.cnx.commit()  # Commit Bc Tables change
-
-        return True, self.cursor
-
-    def close_db(self):
-        self.cursor.close()
-        self.cnx.close()
 
 
 if __name__ == '__main__':
