@@ -54,29 +54,33 @@ def add_topic_nodes(k=10):
     for id, row in topic_df.iterrows():
         vals = row.values
         index = vals[0]
-        paper_node = graph.nodes.match("Paper", id=int(index)).first()
-        for i in range(1, len(vals)):
-            if vals[i] == 1:
-                topic_node = graph.nodes.match("Topic", no=int(i - 1)).first()
-                graph.create(Relationship(paper_node, "TopicOf", topic_node))
-
-
-def update_topic_rel():
-    topic_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/id_topic.csv"))
-    for id, row in topic_df.iterrows():
-        vals = row.values
-        index = vals[0]
         for i in range(1, len(vals)):
             r = 0
             if vals[i] == 1:
                 r = 1
             query = "MATCH (a:Paper {id: {id}})-[r:TopicOf]->(t:Topic {no: {no}}) SET r.score = {s}"
             graph.run(query, {"id": int(index), "no": int(i - 1), "s": int(r)})
+        print(index)
+        if index > 10:
+            break # For Now
+
+
+# def update_topic_rel():
+#     topic_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/id_topic.csv"))
+#     for id, row in topic_df.iterrows():
+#         vals = row.values
+#         index = vals[0]
+#
+#         for i in range(1, len(vals)):
+#             r = 0
+#             if vals[i] == 1:
+#                 r = 1
+#             query = "MATCH (a:Paper {id: {id}})-[r:TopicOf]->(t:Topic {no: {no}}) SET r.score = {s}"
+#             graph.run(query, {"id": int(index), "no": int(i - 1), "s": int(r)})
 
 
 # add_journal_nodes()
 # add_paper_nodes()
 # add_topic_nodes()
 # update_paper_nodes()
-update_topic_rel()
 # Exmaplee query: d = graph.run("MATCH (p:Paper)-[:PUBLISHED]->(j:Journal {id:1}) RETURN p.title").data()
