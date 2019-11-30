@@ -44,38 +44,23 @@ class Neo4jQuery(object):
         return "MATCH (p:Paper) WHERE p.id={id} RETURN p.id, p.authors, p.journal_id, p.title", ["id"]
 
     def search_authors(self):
-        return "MATCH (p:Paper) WHERE p.authors=~ '.*{authors}.*' RETURN p.id, p.authors, p.journal_id, p.title", ["authors"]
+        return "MATCH (p:Paper) WHERE p.authors=~ '.*{authors}.*' RETURN p.id, p.authors, p.journal_id, p.title", [
+            "authors"]
 
     def get_recommended_papers(self):
-        query = """ 
-                        // get target user and their neighbors pairs and count // of distinct movies that they have rented in common 
-                        MATCH (p1:Paper)-[:RENTED]->(t:Topic)<-[:RENTED]-(p2:Paper) 
-                        WHERE p1 <> p2 AND p1.customerID = {cid} 
-                        WITH p1, p2, COUNT(DISTINCT t) as intersection 
+        query = "MATCH (j:Journal)<-[pub1:PUBLISHED]-(p1:Paper)-[r1:TopicOf]->(Topic) " \
+                "WITH p1 AS p1, j AS j, algo.similarity.cosine({topic_vec}, collect(r1.score)) AS similarity " \
+                "RETURN  p1.id, similarity " \
+                "ORDER BY similarity DESC, j.ranking LIMIT 10;"
 
-                        // get count of all the distinct movies that they have rented in total (Union) 
-                        MATCH (p:Paper)-[:RENTED]->(t:Topic) 
-                        WHERE p in [p1, p2] WITH p1, p2, intersection, COUNT(DISTINCT t) as union 
-
-                        // compute Jaccard index 
-                        WITH p1, p2, intersection, union, (intersection * 1.0 / union) as jaccard_index 
-
-                        // get top k nearest neighbors based on Jaccard index 
-                        ORDER BY jaccard_index DESC, p2.id 
-                        WITH p1, COLLECT([p2.id, jaccard_index, intersection, union])[0..{k}] as neighbors WHERE SIZE(neighbors) = {k}   
-
-                        // return users with enough neighbors 
-                        RETURN p1.id as id, neighbors 
-                    """
-        pass # TODO: Need to Figure this out
-
+        return query, ["topic_vec"]
 
     def execute_query(self, query_str, args=[], commit=True):
         tx = self.graph.begin()
         query_str, keys = query_str
 
         if len(query_str) == 0:
-            return True, None # No Query to execute
+            return True, None  # No Query to execute
 
         if len(keys) == 0:
             assign_dict = {}
@@ -103,7 +88,7 @@ if __name__ == '__main__':
         config = yaml.safe_load(stream)
 
     obj = Neo4jQuery(10, config)
-
+    topic_vec = [0, 1, 0, 1, 0, 0, 1, 0, 1, 1]
     import code
 
     code.interact(local={**locals(), **globals()})
