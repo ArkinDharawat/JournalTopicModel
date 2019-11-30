@@ -70,7 +70,7 @@ def update_topic_rel():
             r = 0
             if vals[i] == 1:
                 r = 1
-            query = "MATCH (a:Paper {id: {id}})-[t:TopicOf]->(t:Topic {no: {no}}) SET r.score = {s}"
+            query = "MATCH (a:Paper {id: {id}})-[r:TopicOf]->(t:Topic {no: {no}}) SET r.score = {s}"
             graph.run(query, {"id": int(index), "no": int(i - 1), "s": int(r)})
 
 
