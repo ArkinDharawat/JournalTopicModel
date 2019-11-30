@@ -54,11 +54,14 @@ def add_topic_nodes(k=10):
     for id, row in topic_df.iterrows():
         vals = row.values
         index = vals[0]
+        if index > 10:
+            break
+
         for i in range(1, len(vals)):
             r = 0
             if vals[i] == 1:
                 r = 1
-            query = "MATCH (p:Paper),(t:Topic) WHERE p.id={id} AND t.no={no} CREATE (p)-[r:TopicOf {score:{s}}]->(t)"
+            query = "MATCH (p:Paper),(t:Topic) WHERE p.id={id} AND t.no={no} MERGE (p)-[r:TopicOf {score:{s}}]->(t)"
             graph.run(query, {"id": int(index), "no": int(i - 1), "s": int(r)})
         print(index)
 
