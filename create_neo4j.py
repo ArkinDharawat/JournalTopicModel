@@ -40,7 +40,7 @@ def update_paper_nodes():
     for id, row in articles_df.iterrows():
         title, author, url, abstract, journal_id = row.values
         dict = {"id": int(id), "journal_id":int(journal_id)}
-        output = graph.run("MATCH (p:Paper) WHERE p.id={id} SET p.journal_id={journal_id}", dict).evaluate()
+        output = graph.run("MATCH (p:Paper) WHERE p.id={idim} SET p.journal_id={journal_id}", dict).evaluate()
 
 
 def add_topic_nodes(k=10):
@@ -60,10 +60,22 @@ def add_topic_nodes(k=10):
                 graph.create(Relationship(paper_node, "TopicOf", topic_node))
 
 
-
+def update_topic_rel():
+    topic_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/id_topic.csv"))
+    for id, row in topic_df.iterrows():
+        vals = row.values
+        index = vals[0]
+        paper_node = graph.nodes.match("Paper", id=int(index)).first()
+        for i in range(1, len(vals)):
+            topic_node = graph.nodes.match("Topic", no=int(i - 1)).first()
+            if vals[i] == 1:
+                graph.create(Relationship(paper_node, "TopicOf", topic_node, {"score": 1}))
+            else:
+                graph.create(Relationship(paper_node, "TopicOf", topic_node, {"score": 0}))
 
 # add_journal_nodes()
 # add_paper_nodes()
 # add_topic_nodes()
-update_paper_nodes()
+# update_paper_nodes()
+update_topic_rel()
 # Exmaplee query: d = graph.run("MATCH (p:Paper)-[:PUBLISHED]->(j:Journal {id:1}) RETURN p.title").data()
