@@ -61,8 +61,6 @@ def add_topic_nodes(k=10):
             query = "MATCH (p:Paper),(t:Topic) WHERE p.id={id} AND t.no={no} CREATE (p)-[r:TopicOf {score:{s}}]->(t)"
             graph.run(query, {"id": int(index), "no": int(i - 1), "s": int(r)})
         print(index)
-        if index > 10:
-            break # For Now
 
 
 # def update_topic_rel():
