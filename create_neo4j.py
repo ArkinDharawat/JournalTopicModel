@@ -46,9 +46,9 @@ def update_paper_nodes():
 
 def add_topic_nodes(k=10):
     # Add topic nodes
-    # topic_nodes = [Node("Topic", no=int(x)) for x in range(k)]
-    # for topic_node in topic_nodes:
-    #     graph.create(topic_node)
+    topic_nodes = [Node("Topic", no=int(x)) for x in range(k)]
+    for topic_node in topic_nodes:
+        graph.create(topic_node)
 
     topic_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/id_topic.csv"))
     for id, row in topic_df.iterrows():
