@@ -54,8 +54,8 @@ def add_topic_nodes(k=10):
     for id, row in topic_df.iterrows():
         vals = row.values
         index = vals[0]
-        if index > 10:
-            break
+        if index < 2180:
+            continue
 
         for i in range(1, len(vals)):
             r = 0
