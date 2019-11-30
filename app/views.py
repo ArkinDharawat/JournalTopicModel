@@ -231,10 +231,6 @@ def recommend_data(request):
 
         if g.db_type == "neo":
             topic_vec = [int(x) for x in DatabaseObj.construct_topic_vector(topics)]
-
-            import code
-            code.interact(local={**locals(), **globals()})
-
             get_top_recommendations = DatabaseObj.get_recommended_papers()
             query_bool, result = DatabaseObj.execute_query(get_top_recommendations, [topic_vec])
             if not query_bool:
@@ -261,7 +257,7 @@ def recommend_data(request):
     else:
         for row in result:
             results.append([str(x) for x in row])
-    return render_template("search_results.html", results=results)
+    return render_template("reco_results.html", results=results)
 
 
 @app.after_request
