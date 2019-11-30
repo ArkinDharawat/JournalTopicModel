@@ -68,10 +68,13 @@ def update_topic_rel():
         paper_node = graph.nodes.match("Paper", id=int(index)).first()
         for i in range(1, len(vals)):
             topic_node = graph.nodes.match("Topic", no=int(i - 1)).first()
+            r = Relationship(paper_node, "TopicOf", topic_node)
             if vals[i] == 1:
-                graph.create(Relationship(paper_node, "TopicOf", topic_node, {"score": 1}))
+                r["score"] = 1
+                graph.create()
             else:
-                graph.create(Relationship(paper_node, "TopicOf", topic_node, {"score": 0}))
+                r["score"] = 0
+                graph.create(r)
 
 # add_journal_nodes()
 # add_paper_nodes()
