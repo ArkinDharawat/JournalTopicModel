@@ -48,9 +48,10 @@ class Neo4jQuery(object):
             "authors"]
 
     def get_recommended_papers(self):
-        query = "MATCH (j:Journal)<-[pub1:PUBLISHED]-(p1:Paper)-[r1:TopicOf]->(Topic) WHERE p1.id < 3000 " \
+        # TODO: Remove p1.id < 3000
+        query = "MATCH (j:Journal)<-[pub1:PUBLISHED]-(p1:Paper)-[r1:TopicOf]->(Topic) WHERE p1.id < 3000 " \ 
                 "WITH p1 AS p1, j AS j, algo.similarity.cosine({topic_vec}, collect(r1.score)) AS similarity " \
-                "RETURN  p1.id, similarity " \
+                "RETURN  p.id,  round(similarity * 100) / 100, p.id,, p.authors, p.journal_id, p.title" \
                 "ORDER BY similarity DESC, j.ranking LIMIT 10;"
 
         return query, ["topic_vec"]
