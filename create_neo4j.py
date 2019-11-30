@@ -35,11 +35,12 @@ def add_paper_nodes():
         journal_node = graph.nodes.match("Journal", id=int(journal_id)).first()
         graph.create(Relationship(paper_node, "PUBLISHED", journal_node))
 
+
 def update_paper_nodes():
     articles_df = pd.read_csv(os.path.join(os.path.expanduser('~'), "../project/data/AllArticles_Subset.csv"))
     for id, row in articles_df.iterrows():
         title, author, url, abstract, journal_id = row.values
-        dict = {"id": int(id), "journal_id":int(journal_id)}
+        dict = {"id": int(id), "journal_id": int(journal_id)}
         output = graph.run("MATCH (p:Paper) WHERE p.id={idim} SET p.journal_id={journal_id}", dict).evaluate()
 
 
@@ -56,7 +57,7 @@ def add_topic_nodes(k=10):
         paper_node = graph.nodes.match("Paper", id=int(index)).first()
         for i in range(1, len(vals)):
             if vals[i] == 1:
-                topic_node = graph.nodes.match("Topic", no=int(i-1)).first()
+                topic_node = graph.nodes.match("Topic", no=int(i - 1)).first()
                 graph.create(Relationship(paper_node, "TopicOf", topic_node))
 
 
@@ -65,16 +66,13 @@ def update_topic_rel():
     for id, row in topic_df.iterrows():
         vals = row.values
         index = vals[0]
-        paper_node = graph.nodes.match("Paper", id=int(index)).first()
         for i in range(1, len(vals)):
-            topic_node = graph.nodes.match("Topic", no=int(i - 1)).first()
-            r = Relationship(paper_node, "TopicOf", topic_node)
+            r = 0
             if vals[i] == 1:
-                r["score"] = 1
-                graph.create()
-            else:
-                r["score"] = 0
-                graph.create(r)
+                r = 1
+            query = "MATCH (a:Paper {id: {id}})-[t:TopicOf]->(t:Topic {no: {no}}) SET r.score = {s}"
+            graph.run(query, {"id": int(index), "no": int(i - 1), "s": int(r)})
+
 
 # add_journal_nodes()
 # add_paper_nodes()
