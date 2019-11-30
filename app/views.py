@@ -199,7 +199,7 @@ def search_data(request):
             return result
     else:
         return "Nothing Searched For"
-    
+
     results = []
     if g.db_type == "neo":
         data = result.data()
@@ -213,7 +213,7 @@ def search_data(request):
 
 
 def recommend_data(request):
-    SQLStrObj = g.DatabaseObj
+    DatabaseObj = g.DatabaseObj
     TopicModelobj = g.TopicModelobj
     default = g.default
 
@@ -227,27 +227,36 @@ def recommend_data(request):
         title = remove_non_ascii(title)
         abstract = remove_non_ascii(abstract)
 
+        topics = TopicModelobj.get_topics(title=title, abstract=abstract)
+
         if g.db_type == "neo":
-            return "Cannot Recommend Any Articles. Try Search" # TODO: Fix
+            topic_vec = DatabaseObj.construct_topic_vector(topics)
+            get_top_recommendations = DatabaseObj.get_recommended_papers()
+            query_bool, result = DatabaseObj.execute_query(get_top_recommendations, [topic_vec])
+            if not query_bool:
+                return result
         else:
-            topics = TopicModelobj.get_topics(title=title, abstract=abstract)
-            query_bool, result = SQLStrObj.execute_topic_proc(topics)
+            query_bool, result = DatabaseObj.execute_topic_proc(topics)
             if not query_bool:
                 return result
 
-            get_top_recommendations = SQLStrObj.get_recommended_papers(top_k=10)  # TODO: Make Argument or Get Global
+            get_top_recommendations = DatabaseObj.get_recommended_papers(top_k=10)  # TODO: Make Argument or Get Global
 
-            query_bool, result = SQLStrObj.execute_query(get_top_recommendations, [], False)
+            query_bool, result = DatabaseObj.execute_query(get_top_recommendations, [], False)
             if not query_bool:
                 return result
     else:
         return "Cannot Recommend Any Articles. Try Search"
 
     results = []
-    for row in result:
-        results.append([str(x) for x in row])
-    import code
-    code.interact(local={**locals(), **globals()})
+    if g.db_type == "neo":
+        data = result.data()
+        for r in data:
+            row = r.values()
+            results.append([str(x) for x in row])
+    else:
+        for row in result:
+            results.append([str(x) for x in row])
     return render_template("search_results.html", results=results)
 
 
