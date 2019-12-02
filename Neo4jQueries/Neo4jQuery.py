@@ -24,7 +24,7 @@ class Neo4jQuery(object):
     def update_paper(self, col_names):
         self.num_topics # Not really required
         alter_str = ','.join(["p." + x + "={" + x + "}" for x in col_names])
-        col_names = col_names.append("id")
+        col_names.append("id")
         return "MATCH (p:Paper) WHERE p.id={id} SET " + alter_str + ";", col_names
 
     def insert_topic(self, paper_id, topic_indices):
