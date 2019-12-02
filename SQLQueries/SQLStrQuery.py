@@ -1,6 +1,7 @@
 class SQLStrQuery(object):
-    def __init__(self, k):
+    def __init__(self, k, config):
         self.num_topics = k
+        self.config = config
 
     def create_procedure(self):
         part1 = "CREATE PROCEDURE GetTopicCosDist(" + ','.join(
