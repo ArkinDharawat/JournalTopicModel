@@ -77,6 +77,11 @@ def insert_data(request):
     abstract = str(request.form['abstract'])
     journal_id = str(request.form['journal_id'])
 
+    default = g.default
+    if g.db_type == "neo" and paper_id != default:
+        paper_id = int(request.form['paper_id'])
+        journal_id = int(request.form['journal_id'])
+
     title = remove_non_ascii(title)
     abstract = remove_non_ascii(abstract)
 
@@ -99,7 +104,12 @@ def insert_data(request):
 def delete_data(request):
     DatabaseObj = g.DatabaseObj
 
+    default = g.default
+
     paper_id = str(request.form['paper_id'])
+    if g.db_type == "neo" and paper_id != default:
+        paper_id = int(request.form['paper_id'])
+
     delete_paper_query = DatabaseObj.delete_paper()
     delete_topic = DatabaseObj.delete_topic()
 
@@ -139,8 +149,12 @@ def filter_update_data(request):
 
 def update_data(request):
     DatabaseObj = g.DatabaseObj
+    default = g.default
 
     paper_id = str(request.form['paper_id'])
+    if g.db_type == "neo" and paper_id != default:
+        paper_id = int(request.form['paper_id'])
+
 
     data_map = filter_update_data(request)
     column = []
