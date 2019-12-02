@@ -101,7 +101,7 @@ class SQLStrQuery(object):
     def get_recommended_papers(self, top_k):
         if top_k < self.num_topics:
             top_k = self.num_topics
-        return "SELECT P.Paper_Id, P.Title, P.Abstract, J.Journal_Id FROM temp_topic_table T JOIN Academic_Paper P ON T.Paper_Id = P.Paper_Id JOIN Academic_Journal J ON P.Journal_Id=J.Journal_Id WHERE J.Rank!=0 ORDER BY CosineDistance DESC, J.Rank ASC LIMIT " + str(
+        return "SELECT P.Paper_Id, CosineDistance, P.Abstract, P.Authors, J.Journal_Id, P.Title FROM temp_topic_table T JOIN Academic_Paper P ON T.Paper_Id = P.Paper_Id JOIN Academic_Journal J ON P.Journal_Id=J.Journal_Id WHERE J.Rank!=0 ORDER BY CosineDistance DESC, J.Rank ASC LIMIT " + str(
             top_k) + ";"
 
     def execute_query(self, query_str, args=[], commit=True):
