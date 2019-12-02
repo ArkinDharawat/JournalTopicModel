@@ -154,6 +154,10 @@ def update_data(request):
     if column != [] and data != []:
         update_query = DatabaseObj.update_paper(column)
         query_res, err = DatabaseObj.execute_query(update_query, data)
+
+        import code
+        code.interact(local={**locals(), **globals()})
+
         if not query_res:
             return "UPDATE ERROR"
 
