@@ -150,10 +150,6 @@ def update_data(request):
         data.append(data_map[col])
     data.append(paper_id)
 
-    import code
-
-    code.interact(local={**locals(), **globals()})
-
     # TODO: Add Update for Topics if title/abstract updated
     if column != [] and data != []:
         update_query = DatabaseObj.update_paper(column)
