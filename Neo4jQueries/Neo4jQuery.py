@@ -21,6 +21,11 @@ class Neo4jQuery(object):
         return "CREATE (p:Paper {id:{id}, authors:{authors}, journal_id:{journal_id}, title:{title}, abstract:{abstract}})", [
             "id", "authors", "journal_id", "title", "abstract"]
 
+    def update_paper(self, col_names):
+        self.num_topics # Not really required
+        alter_str = ','.join(["p." + x + "={" + x + "}" for x in col_names])
+        return "MATCH (p:Paper) WHERE p.id={id} SET " + alter_str + ";", ["id", col_names]
+
     def insert_topic(self, paper_id, topic_indices):
         paper_topic_rel_str = "MATCH (p:Paper), (t:Topic) WHERE p.id={0} AND t.no IN [{1}] CREATE (p)-[:TopicOf]->(t)"
         value_str = self.construct_topic_vector(topic_indices)
