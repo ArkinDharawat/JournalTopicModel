@@ -273,9 +273,6 @@ def recommend_data(request):
             row = r.values()
             results.append([str(x) for x in row])
     else:
-        import code
-        code.interact(local={**locals(), **globals()})
-
         for row in result:
             results.append([str(x) for x in row])
     return render_template("reco_results.html", results=results)
