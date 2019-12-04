@@ -219,7 +219,8 @@ def search_data(request):
         return "Nothing Searched For"
 
     results = DatabaseObj.get_results(result)
-
+    import code
+    code.interact(local={**locals(), **globals()})
     return render_template("search_results.html", results=results)
 
 

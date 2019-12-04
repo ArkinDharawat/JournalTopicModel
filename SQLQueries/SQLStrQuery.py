@@ -93,7 +93,7 @@ class SQLStrQuery(object):
         return "SELECT * FROM Academic_Paper WHERE Paper_Id = %s;"
 
     def search_journal(self):
-        return "SELECT * FROM Academic_Paper WHERE Journal_Id = %s;"
+        return "SELECT * FROM Academic_Paper P JOIN Academic_Journal J ON P.Journal_Id=J.Journal_Id WHERE P.Journal_Id = %s;"
 
     def search_authors(self):
         return "SELECT * FROM Academic_Paper WHERE Authors LIKE \"%%s%\";"
