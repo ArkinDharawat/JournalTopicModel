@@ -20,4 +20,5 @@ Version 1.1.0
     ```
 7. `requirements.txt`: Required python librarires for running the server
 8. `run.py`: Script to run the server. However we suggest another way to run it, See Below.
-[Project Report](https://drive.google.com/file/d/17RjdVVvUDzoNn1tZOC4_onLCtGK6Zf_F/view)
+
+### [Project Report](https://drive.google.com/file/d/17RjdVVvUDzoNn1tZOC4_onLCtGK6Zf_F/view)
