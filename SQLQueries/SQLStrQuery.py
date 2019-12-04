@@ -126,6 +126,12 @@ class SQLStrQuery(object):
 
         return True, self.cursor
 
+    def get_results(self, cursor_results):
+        parsed_results = []
+        for row in cursor_results:
+            parsed_results.append([str(x) for x in row])
+        return parsed_results
+
     def close_db(self):
         self.cursor.close()
         self.cnx.close()

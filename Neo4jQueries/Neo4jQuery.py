@@ -22,7 +22,7 @@ class Neo4jQuery(object):
             "id", "authors", "journal_id", "title", "abstract"]
 
     def update_paper(self, col_names):
-        self.num_topics # Not really required
+        self.num_topics  # Not really required
         alter_str = ','.join(["p." + x + "={" + x + "}" for x in col_names])
         col_names.append("id")
         return "MATCH (p:Paper) WHERE p.id={id} SET " + alter_str + ";", col_names
@@ -60,7 +60,7 @@ class Neo4jQuery(object):
         q3 = "RETURN  p1.id, round(similarity * 100) / 100, p1.abstract, p1.authors, p1.journal_id, p1.title "
         q4 = "ORDER BY similarity DESC, j.ranking LIMIT 10;"
 
-        return q1+q2+q3+q4, ["topic_vec"]
+        return q1 + q2 + q3 + q4, ["topic_vec"]
 
     def execute_query(self, query_str, args=[], commit=True):
         tx = self.graph.begin()
@@ -82,6 +82,14 @@ class Neo4jQuery(object):
             return False, e
 
         return True, cursor
+
+    def get_results(self, cursor_results):
+        parsed_results = []
+        data = cursor_results.data()
+        for r in data:
+            row = r.values()
+            parsed_results.append([str(x) for x in row])
+        return parsed_results
 
     def close_db(self):
         return  # py2neo use a REST API
