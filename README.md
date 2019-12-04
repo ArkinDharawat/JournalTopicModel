@@ -4,9 +4,9 @@ Version 1.1.0
 ### Repository description
 1. [Neo4JQueries](Neo4jQueries): Class for the Neo4J queries and Neo4J driver.
 2. [SQLQueries](SQLQueries): Class for the SQL queries and SQL driver.
-3. [TopicModel](): Library for pre-processing and extracting relevant topics from text. Can also be used to train topic model new corpus.
-4. [app](): Flask application with templates and views. 
-5. [scripts](): Scripts used to load data into the databases and perform other miscellaneous tasks.  
+3. [TopicModel](TopicModel): Library for pre-processing and extracting relevant topics from text. Can also be used to train topic model new corpus.
+4. [app](app): Flask application with templates and views. 
+5. [scripts](scripts): Scripts used to load data into the databases and perform other miscellaneous tasks.  
 6. `config.py`: Configuration file used by the server to access the database of your choice.
     If you want to use a SQL database use:
     ```python
