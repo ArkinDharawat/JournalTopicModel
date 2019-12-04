@@ -220,16 +220,6 @@ def search_data(request):
 
     results = DatabaseObj.get_results(result)
 
-    # results = []
-    # if g.db_type == "neo":
-    #     data = result.data()
-    #     for r in data:
-    #         row = r.values()
-    #         results.append([str(x) for x in row])
-    # else:
-    #     for row in result:
-    #         results.append([str(x) for x in row])
-
     return render_template("search_results.html", results=results)
 
 
@@ -269,15 +259,7 @@ def recommend_data(request):
     else:
         return "Cannot Recommend Any Articles. Try Search"
 
-    results = []
-    if g.db_type == "neo":
-        data = result.data()
-        for r in data:
-            row = r.values()
-            results.append([str(x) for x in row])
-    else:
-        for row in result:
-            results.append([str(x) for x in row])
+    results = DatabaseObj.get_results(result)
     return render_template("reco_results.html", results=results)
 
 
