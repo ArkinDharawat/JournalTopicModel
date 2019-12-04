@@ -1,3 +1,3 @@
-# JournalTopicModel
+# Scientific Paper Recommendation System
 CS 411 Final Project
 Version 1.1.0
