@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            padding: 25px 50px 75px 100px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <table class="centered thick-border">
+        <thead>
+            <tr>
+                <th>Paper_Id</th>
+                <th>Authors</th>
+                <th>Journal_Id</th>
+                <th>Title</th>
+                <th>Journal Rank</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for k in results %}
+                <tr>
+                        <td>{{ k[0] }}</td>
+                        <td>{{ k[1] }}</td>
+                        <td>{{ k[2] }}</td>
+                        <td>{{ k[3] }}</td>
+                        <td>{{ k[-1] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+</table>
+</body>
+</html>
