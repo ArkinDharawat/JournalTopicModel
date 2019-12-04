@@ -57,7 +57,6 @@ def insert_endpoint():
     elif action == DELETE:
         delete_data(request)
         return render_template('delete_successful.html')
-
     elif action == UPDATE:
         update_data(request)
         return render_template('update_successful.html')
@@ -92,11 +91,11 @@ def insert_data(request):
     insert_topic_query = DatabaseObj.insert_topic(paper_id, topics)
     query_bool, result = DatabaseObj.execute_query(insert_paper_query, [paper_id, authors, journal_id, title, abstract])
     if not query_bool:
-        return "INSERTION ERROR"
+        return render_template("error_response.html", error_str=result)
 
     query_bool, result = DatabaseObj.execute_query(insert_topic_query)
     if not query_bool:
-        return "INSERTION ERROR"
+        return render_template("error_response.html", error_str=result)
 
     return "INSERTION SUCCESSFULL"
 
@@ -154,7 +153,6 @@ def update_data(request):
     paper_id = str(request.form['paper_id'])
     if g.db_type == "neo" and paper_id != default:
         paper_id = int(request.form['paper_id'])
-
 
     data_map = filter_update_data(request)
     column = []
