@@ -206,6 +206,8 @@ def search_data(request):
         query_bool, result = DatabaseObj.execute_query(search_journal, [journal_id], False)
         if not query_bool:
             return result
+        results = DatabaseObj.get_results(result)
+        return render_template("search_results_journal.html", results=results)
 
     elif paper_id != default:
         if g.db_type == "neo":
