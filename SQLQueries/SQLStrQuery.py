@@ -57,7 +57,7 @@ class SQLStrQuery(object):
     def construct_topic_vector(self, topic_indices):
         """ Construct the topic indicator vector
         Args:
-            topic_indices:  List of tuples (topic_i, prob_i) returned from LDA model
+            topic_indices:  List of topic indexes returned from LDA model
         Returns: indicator vector
         """
         value_str = ["0"] * self.num_topics
