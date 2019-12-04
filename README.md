@@ -18,7 +18,21 @@ Version 1.1.0
     DB_TYPE="neo"
     AUTH_FILE="config_neo.yml"
     ```
-7. `requirements.txt`: Required python librarires for running the server
+7. `requirements.txt`: Required python libraries for running the server
 8. `run.py`: Script to run the server. However we suggest another way to run it, See Below.
 
+### How To Run
+1. You first need to have a `config.yml` or `config_nep.yml` if you want to use a SQL/ Neo4J database respectively.
+   The files must have the following format:
+   ```yaml
+    user: 
+    password: 
+    host: 
+    database: 
+    ```
+2. Make sure you have the model files for using the Gensim topic model. They should be present in the folder and provided 
+   to the `TopicExtractor` class in `views.py`
+
+3. Run the command `flask run -host=0.0.0.0` in the repository to start the server. 
+    
 ### [Project Report](https://drive.google.com/file/d/17RjdVVvUDzoNn1tZOC4_onLCtGK6Zf_F/view)
