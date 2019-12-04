@@ -52,8 +52,7 @@ def insert_endpoint():
     action = str(request.form.get('action'))
 
     if action == INSERT:
-        insert_data(request)
-        return render_template('insert_successful.html')
+        return insert_data(request)
     elif action == DELETE:
         delete_data(request)
         return render_template('delete_successful.html')
@@ -99,7 +98,7 @@ def insert_data(request):
     if not query_bool:
         return render_template("error_response.html", error_str=str(result))
 
-    return "INSERTION SUCCESSFULL"
+    return render_template('insert_successful.html')
 
 
 def delete_data(request):
