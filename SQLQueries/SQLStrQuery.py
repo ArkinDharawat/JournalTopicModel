@@ -108,7 +108,7 @@ class SQLStrQuery(object):
         try:
             self.cursor.execute(query_str, tuple(args))
         except Exception as e:
-            print("Error :" + str(e))
+            # print("Error :" + str(e))
             return False, e
         if commit:
             self.cnx.commit()  # Queries that need to be commited

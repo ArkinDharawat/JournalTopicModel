@@ -90,12 +90,14 @@ def insert_data(request):
 
     insert_topic_query = DatabaseObj.insert_topic(paper_id, topics)
     query_bool, result = DatabaseObj.execute_query(insert_paper_query, [paper_id, authors, journal_id, title, abstract])
+    import code
+    code.interact(local={**locals(), **globals()})
     if not query_bool:
-        return render_template("error_response.html", error_str=result)
+        return render_template("error_response.html", error_str=str(result))
 
     query_bool, result = DatabaseObj.execute_query(insert_topic_query)
     if not query_bool:
-        return render_template("error_response.html", error_str=result)
+        return render_template("error_response.html", error_str=str(result))
 
     return "INSERTION SUCCESSFULL"
 
