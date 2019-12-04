@@ -54,11 +54,9 @@ def insert_endpoint():
     if action == INSERT:
         return insert_data(request)
     elif action == DELETE:
-        delete_data(request)
-        return render_template('delete_successful.html')
+        return delete_data(request)
     elif action == UPDATE:
-        update_data(request)
-        return render_template('update_successful.html')
+        return update_data(request)
     elif action == SEARCH:
         return search_data(request)
     elif action == RECOMMEND:
@@ -89,8 +87,6 @@ def insert_data(request):
 
     insert_topic_query = DatabaseObj.insert_topic(paper_id, topics)
     query_bool, result = DatabaseObj.execute_query(insert_paper_query, [paper_id, authors, journal_id, title, abstract])
-    import code
-    code.interact(local={**locals(), **globals()})
     if not query_bool:
         return render_template("error_response.html", error_str=str(result))
 
@@ -115,13 +111,13 @@ def delete_data(request):
 
     query_bool, result = DatabaseObj.execute_query(delete_topic, [paper_id])
     if not query_bool:
-        return "DELETE ERROR"
+        return render_template("error_response.html", error_str=str(result))
 
     query_bool, result = DatabaseObj.execute_query(delete_paper_query, [paper_id])
     if not query_bool:
-        return "DELETE ERROR"
+        return render_template("error_response.html", error_str=str(result))
 
-    return "DELETION SUCCESSFULL"
+    return render_template('delete_successful.html')
 
 
 def filter_update_data(request):
@@ -168,13 +164,10 @@ def update_data(request):
         update_query = DatabaseObj.update_paper(column)
         query_res, err = DatabaseObj.execute_query(update_query, data)
 
-        # import code
-        # code.interact(local={**locals(), **globals()})
-
         if not query_res:
-            return "UPDATE ERROR"
+            return render_template("error_response.html", error_str=str(err))
 
-    return "UPDATE SUCCESSFULL"
+    return render_template('update_successful.html')
 
 
 def search_data(request):
@@ -185,7 +178,7 @@ def search_data(request):
     journal_id = str(request.form['journal_id'])
 
     if paper_id == default and authors == default and journal_id == default:
-        return "Cannot Search For Result"
+        return render_template("error_response.html", error_str=str("Cannot Search For Result"))
     elif authors != default:
         if g.db_type == "neo":
             query_str = "MATCH (p:Paper) WHERE p.authors=~ '.*" + authors + ".*' RETURN p.id, p.authors, p.journal_id, p.title", []
@@ -193,9 +186,8 @@ def search_data(request):
             query_str = 'SELECT * FROM Academic_Paper WHERE Authors LIKE "%' + authors + '%";'
 
         query_bool, result = DatabaseObj.execute_query(query_str, commit=False)
-
         if not query_bool:
-            return result
+            return render_template("error_response.html", error_str=str(result))
 
     elif journal_id != default:
         if g.db_type == "neo":
@@ -204,7 +196,7 @@ def search_data(request):
         search_journal = DatabaseObj.search_journal()
         query_bool, result = DatabaseObj.execute_query(search_journal, [journal_id], False)
         if not query_bool:
-            return result
+            return render_template("error_response.html", error_str=str(result))
         results = DatabaseObj.get_results(result)
         return render_template("search_result_journal.html", results=results)
 
@@ -215,9 +207,9 @@ def search_data(request):
         search_paper = DatabaseObj.search_paper()
         query_bool, result = DatabaseObj.execute_query(search_paper, [paper_id], False)
         if not query_bool:
-            return result
+            return render_template("error_response.html", error_str=str(result))
     else:
-        return "Nothing Searched For"
+        return render_template("error_response.html", error_str=str("Nothing Searched For"))
 
     results = DatabaseObj.get_results(result)
     return render_template("search_results.html", results=results)
@@ -245,19 +237,19 @@ def recommend_data(request):
             get_top_recommendations = DatabaseObj.get_recommended_papers()
             query_bool, result = DatabaseObj.execute_query(get_top_recommendations, [topic_vec])
             if not query_bool:
-                return result
+                return render_template("error_response.html", error_str=str(result))
         else:
             query_bool, result = DatabaseObj.execute_topic_proc(topics)
             if not query_bool:
-                return result
+                return render_template("error_response.html", error_str=str(result))
 
             get_top_recommendations = DatabaseObj.get_recommended_papers(top_k=10)  # TODO: Make Argument or Get Global
 
             query_bool, result = DatabaseObj.execute_query(get_top_recommendations, [], False)
             if not query_bool:
-                return result
+                return render_template("error_response.html", error_str=str(result))
     else:
-        return "Cannot Recommend Any Articles. Try Search"
+        return render_template("error_response.html", error_str="Cannot Recommend Any Articles. Try Search")
 
     results = DatabaseObj.get_results(result)
     return render_template("reco_results.html", results=results)
