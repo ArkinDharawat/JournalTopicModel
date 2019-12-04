@@ -3,12 +3,15 @@ import mysql.connector
 
 class SQLStrQuery(object):
     def __init__(self, k, config):
-        self.num_topics = k
-        self.config = config
-        self.cnx = mysql.connector.connect(**config)
-        self.cursor = self.cnx.cursor()
+        self.num_topics = k  # number of topics
+        self.config = config  # config dict for database
+        self.cnx = mysql.connector.connect(**config)  # Connect to SQL server
+        self.cursor = self.cnx.cursor()  # Cursor to send queries
 
     def create_procedure(self):
+        """Build the cosine similarity procedure based on the number of topics
+        Returns: the query string that is a stored procedure
+        """
         part1 = "CREATE PROCEDURE GetTopicCosDist(" + ','.join(
             [" IN B_Topic{0} INTEGER".format(i) for i in range(self.num_topics)]) + ") BEGIN \n"
 
@@ -52,12 +55,20 @@ class SQLStrQuery(object):
         return [table_acad_journal, table_acad_paper, table_topic]
 
     def construct_topic_vector(self, topic_indices):
+        """ Construct the topic indicator vector
+        Args:
+            topic_indices:  List of tuples (topic_i, prob_i) returned from LDA model
+        Returns: indicator vector
+        """
         value_str = ["0"] * self.num_topics
         for k in topic_indices:
             value_str[k - 1] = "1"
         return value_str
 
     def insert_journal(self):
+        """ Insert Journal into Graph
+        Returns: Query string
+        """
         return "INSERT INTO Academic_Journal (Journal_Id, Journal_Name, Category) VALUES (%s, %s, %s);"
 
     def insert_paper(self):
@@ -72,6 +83,12 @@ class SQLStrQuery(object):
         return "DELETE FROM Academic_Paper WHERE Paper_Id = %s;"
 
     def insert_topic(self, paper_id, topic_indices):
+        """ Insert Paper-Topic Relationship into Graph
+        Args:
+            paper_id: the id of the paper inserted
+            topic_indices: indicator topic vector
+        Returns: Query string
+        """
         topic_str = ','.join(["Topic{0}".format(i) for i in range(self.num_topics)])
         value_str = self.construct_topic_vector(topic_indices)
         value_str = ",".join(value_str)
@@ -99,12 +116,24 @@ class SQLStrQuery(object):
         return "SELECT * FROM Academic_Paper WHERE Authors LIKE \"%%s%\";"
 
     def get_recommended_papers(self, top_k):
+        """ Get the top_k recommended papers ranked based on journal ranking and similarity
+        Args:
+            top_k: the top k papers
+        Returns: Query string
+        """
         if top_k < self.num_topics:
             top_k = self.num_topics
         return "SELECT P.Paper_Id, CosineDistance, P.Abstract, P.Authors, J.Journal_Id, P.Title FROM temp_topic_table T JOIN Academic_Paper P ON T.Paper_Id = P.Paper_Id JOIN Academic_Journal J ON P.Journal_Id=J.Journal_Id WHERE J.Rank!=0 ORDER BY CosineDistance DESC, J.Rank ASC LIMIT " + str(
             top_k) + ";"
 
     def execute_query(self, query_str, args=[], commit=True):
+        """ Execute query on Neo4J graph
+        Args:
+            query_str: the query-string structure returned by the methods
+            args: argument values to use in the query
+            commit: Commit query or no
+        Returns: (False, Error) or (True, Cursor)
+        """
         try:
             self.cursor.execute(query_str, tuple(args))
         except Exception as e:
@@ -116,25 +145,38 @@ class SQLStrQuery(object):
         return True, self.cursor
 
     def execute_topic_proc(self, topics):
+        """ Run the stored procedure to calculate cosine similarity
+        Args:
+            topics: list of topic-tuples returned from LDA model
+        Returns: (False, Error) or (True, Cursor)
+        """
         try:
             self.cursor.callproc("GetTopicCosDist", args=tuple(self.construct_topic_vector(topics)))
         except Exception as e:
             print("Error :" + str(e))
             return False, e
 
-        self.cnx.commit()  # Commit Bc Tables change
+        self.cnx.commit()  # Commit because we generate a temporary table
 
         return True, self.cursor
 
     def get_results(self, cursor_results):
+        """ Parse results returned by the cursor of the database
+        Args:
+            cursor_results: Results returned by the cursor of this database
+        Returns: list of values from cursor
+        """
         parsed_results = []
         for row in cursor_results:
             parsed_results.append([str(x) for x in row])
         return parsed_results
 
     def close_db(self):
-        self.cursor.close()
-        self.cnx.close()
+        """ Close database connection
+        Returns: None
+        """
+        self.cursor.close()  # Close the cursor
+        self.cnx.close()  # Close the server connection
 
 
 if __name__ == '__main__':

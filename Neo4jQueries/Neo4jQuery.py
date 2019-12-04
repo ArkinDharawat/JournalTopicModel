@@ -43,6 +43,9 @@ class Neo4jQuery(object):
 
     def insert_topic(self, paper_id, topic_indices):
         """ Insert Paper-Topic Relationship into Graph
+        Args:
+            paper_id: the id of the paper inserted
+            topic_indices: indicator topic vector
         Returns: Query string, Query keys
         """
         paper_topic_rel_str = "MATCH (p:Paper), (t:Topic) WHERE p.id={0} AND t.no IN [{1}] CREATE (p)-[:TopicOf]->(t)"
