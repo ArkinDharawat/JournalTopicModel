@@ -3,31 +3,48 @@ from py2neo import Graph, Node, Relationship
 
 class Neo4jQuery(object):
     def __init__(self, k, config):
-        self.num_topics = k
-        self.config = config
-        self.graph = Graph(auth=(config["user"], config["password"]))
+        self.num_topics = k  # number of topics
+        self.config = config  # config dict for database
+        self.graph = Graph(auth=(config["user"], config["password"]))  # get Neo4J graph
 
     def construct_topic_vector(self, topic_indices):
+        """ Construct the topic indicator vector
+        Args:
+            topic_indices:  List of tuples (topic_i, prob_i) returned from LDA model
+        Returns: indicator vector
+        """
         value_str = ["0"] * self.num_topics
         for k in topic_indices:
             value_str[k - 1] = "1"
         return value_str
 
     def insert_journal(self):
+        """ Insert Journal into Graph
+        Returns: Query string, Query keys
+        """
         return "CREATE (j:Journal {id:{id}, name:{name}, field:{field}, ranking:{ranking})", ["id", "name", "field",
                                                                                               "ranking"]
 
     def insert_paper(self):
+        """ Insert Paper into Graph
+        Returns: Query string, Query keys
+        """
         return "CREATE (p:Paper {id:{id}, authors:{authors}, journal_id:{journal_id}, title:{title}, abstract:{abstract}})", [
             "id", "authors", "journal_id", "title", "abstract"]
 
     def update_paper(self, col_names):
+        """ Update Paper in Graph
+        Returns: Query string, Query keys
+        """
         self.num_topics  # Not really required
         alter_str = ','.join(["p." + x + "={" + x + "}" for x in col_names])
         col_names.append("id")
         return "MATCH (p:Paper) WHERE p.id={id} SET " + alter_str + ";", col_names
 
     def insert_topic(self, paper_id, topic_indices):
+        """ Insert Paper-Topic Relationship into Graph
+        Returns: Query string, Query keys
+        """
         paper_topic_rel_str = "MATCH (p:Paper), (t:Topic) WHERE p.id={0} AND t.no IN [{1}] CREATE (p)-[:TopicOf]->(t)"
         value_str = self.construct_topic_vector(topic_indices)
         topic_nodes = []
@@ -55,6 +72,9 @@ class Neo4jQuery(object):
             "authors"]
 
     def get_recommended_papers(self):
+        """ Recommendation Query for calculating cosine-sim, ranking and returning results
+        Returns: Query string, Query keys
+        """
         # TODO: Remove p1.id < 3000
         q1 = "MATCH (j:Journal)<-[pub1:PUBLISHED]-(p1:Paper)-[r1:TopicOf]->(Topic) WHERE p1.id < 3000 AND j.ranking <> -1 "
         q2 = "WITH p1 AS p1, j AS j, algo.similarity.cosine({topic_vec}, collect(r1.score)) AS similarity "
@@ -64,6 +84,13 @@ class Neo4jQuery(object):
         return q1 + q2 + q3 + q4, ["topic_vec"]
 
     def execute_query(self, query_str, args=[], commit=True):
+        """ Execute query on Neo4J graph
+        Args:
+            query_str: the query-string structure returned by the methods
+            args: argument values to use in the query
+            commit: Commit query or no (NOT USED IN THIS CASE)
+        Returns: (False, Error) or (True, Cursor)
+        """
         tx = self.graph.begin()
         query_str, keys = query_str
 
@@ -85,6 +112,11 @@ class Neo4jQuery(object):
         return True, cursor
 
     def get_results(self, cursor_results):
+        """ Parse results returned by the cursor of the database
+        Args:
+            cursor_results: Results returned by the cursor of this database
+        Returns: list of values from cursor
+        """
         parsed_results = []
         data = cursor_results.data()
         for r in data:
@@ -93,10 +125,12 @@ class Neo4jQuery(object):
         return parsed_results
 
     def close_db(self):
-        return  # py2neo use a REST API
+        # Do not need to close database since py2neo uses a stateless REST API
+        return
 
 
 if __name__ == '__main__':
+    # Example to use. For demostration purposes only
     import os
     import yaml
 
