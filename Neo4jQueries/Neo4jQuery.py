@@ -44,7 +44,7 @@ class Neo4jQuery(object):
         return "", []  # Empty bc delete_paper handles it
 
     def search_journal(self):
-        return "MATCH (j:Journal)<-[pub1:PUBLISHED]-(p:Paper) WHERE p.journal_id={id} RETURN p.id, p.authors, p.journal_id, p.title, p.rank", ["id"]
+        return "MATCH (j:Journal)<-[pub1:PUBLISHED]-(p:Paper) WHERE p.journal_id={id} RETURN p.id, p.authors, p.journal_id, p.title, j.rank", ["id"]
 
     def search_paper(self):
         return "MATCH (p:Paper) WHERE p.id={id} RETURN p.id, p.authors, p.journal_id, p.title", ["id"]
