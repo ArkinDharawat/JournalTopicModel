@@ -18,7 +18,7 @@ MarkupSafe==1.1.1
 murmurhash==1.0.2
 mysql-connector==2.2.9
 nltk==3.4.5
-numpy==1.17.3
+numpy==1.22.0
 pandas==0.25.2
 plac==0.9.6
 preshed==3.0.2
